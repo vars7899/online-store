@@ -1,4 +1,4 @@
-import { Button, IconButton, Image, Select, Tag } from "@chakra-ui/react";
+import { Button, IconButton, Image, Progress, Select, Tag } from "@chakra-ui/react";
 import * as Layout from "../../layouts";
 import * as Component from "../../components";
 import { IconChevronLeft, IconHeart, IconShoppingBagPlus, IconUserCircle } from "@tabler/icons-react";
@@ -211,6 +211,7 @@ export const ProductDetailsScreen = () => {
             </div>
           </div>
         </div>
+        <ProductRating product={selectedProduct} />
         <div className="text-3xl my-16">
           <p>Related Products</p>
           <Component.Default.CustomBorderLine />
@@ -226,6 +227,70 @@ const ProductPackageDetailsPair = ({ productPropertyName, propertyValue, propert
       <p>
         {propertyValue} {propertyUnit}
       </p>
+    </div>
+  );
+};
+
+const ProductRating = ({ product }) => {
+  // Here index + 1 is equal to the rating and value is equal to num reviews
+  const [typeNumReviews, setTypeNumReviews] = useState([0, 0, 0, 0, 0]);
+
+  useEffect(() => {
+    $calcRatingNumReviews(product.reviews);
+  }, [product]);
+
+  function $calcRatingNumReviews(reviews) {
+    const reviewRating = reviews.reduce(
+      (acc, review) => {
+        const rating = review.rating;
+
+        if (rating >= 1 && rating <= 5) {
+          acc[rating - 1] += 1;
+        }
+        return acc;
+      },
+      [0, 0, 0, 0, 0]
+    );
+
+    setTypeNumReviews(reviewRating);
+  }
+
+  function $calcPercentageForNumReview(total, totalOfType) {
+    return (totalOfType / total) * 100;
+  }
+
+  return (
+    <div>
+      <p className="text-2xl mb-4">Rating & Reviews</p>
+      <div className="flex">
+        <div className="border-r-[1px] pl-2 pr-20">
+          <p>
+            <span className="text-4xl font-semibold">{Number(product.averageRating).toFixed(1)}</span>
+            <span className="text-gray-400 text-lg ml-1">/ 5</span>
+          </p>
+          <div className="text-gold my-3">
+            <Rating initialRating={product.averageRating} {...ReactRatingProps(28)} readonly />
+          </div>
+        </div>
+        <div className="pl-8">
+          {typeNumReviews.map((rate, index) => (
+            <div className="text-gold flex items-start justify-start">
+              <Rating initialRating={index + 1} {...ReactRatingProps(20)} readonly />
+              <Progress
+                mt={0.5}
+                value={$calcPercentageForNumReview(product.reviews.length, rate)}
+                h={"14px"}
+                w={"400px"}
+                mx={4}
+                borderRadius={"full"}
+                bg={"blackAlpha.100"}
+                colorScheme="blackAlpha"
+              />
+              <p className="text-gray-400 text-center">{rate}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
