@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.disable-scrollbars::-webkit-scrollbar {
+  background: transparent; /* Chrome/Safari/Webkit */
+  width: 0px;
+}
+
+.disable-scrollbars {
+  scrollbar-width: none; /* Firefox */
+}
+
+.overview-card {
+  @apply rounded-xl border-[1.5px];
+}
+
+.paginate-item {
+  @apply rounded-lg py-1 px-3 text-sm mx-3 bg-gray-50 text-gray-500 hidden xl:block;
+}
+
+.active-paginate-item {
+  @apply bg-blue-50 font-semibold;
+}
+
+.paginate {
+  @apply w-fit flex items-center justify-center py-2 rounded-lg;
+}
+
+.paginate-move-item {
+  @apply border-[1px] rounded-lg py-1 px-3 text-2xl;
+}
+
+.border-box {
+  @apply border-[1px] rounded-lg border-gray-200 p-4;
+}
