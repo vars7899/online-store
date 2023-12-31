@@ -13,6 +13,7 @@ import * as storeAction from "../../redux/features/storeSlice";
 import toast from "react-hot-toast";
 import { DateTime } from "luxon";
 import ReactPaginate from "react-paginate";
+import ProductCard from "../../components/Home/ProductCard";
 
 export const ProductDetailsScreen = () => {
   // States
@@ -21,12 +22,13 @@ export const ProductDetailsScreen = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { selectedProduct, isLoading, isError, message, cart, wishlist } = useSelector((state) => state.store);
+  const { selectedProduct, isLoading, isError, message, wishlist, productList } = useSelector((state) => state.store);
 
   // Initialize page details
   useEffect(() => {
     if (productId) {
       dispatch(storeThunkAction.GET_STORE_PRODUCT_DETAILS(productId));
+      dispatch(storeThunkAction.GET_ALL_STORE_PRODUCTS());
     }
     dispatch(storeThunkAction.GET_USER_WISHLIST_DETAILS());
   }, [dispatch]);
@@ -178,11 +180,7 @@ export const ProductDetailsScreen = () => {
         <ProductRating product={selectedProduct} />
         <Divider my={6} />
         <ProductReviews reviews={selectedProduct.reviews} />
-
-        <div className="text-3xl my-16">
-          <p>Related Products</p>
-          <Component.Default.CustomBorderLine />
-        </div>
+        <RelatedProductSection className="" productList={productList} />
       </Layout.Basic>
     );
 };
@@ -317,6 +315,20 @@ const ProductReviews = ({ reviews }) => {
         <Button variant={"outline"} w="full">
           Write A Review
         </Button>
+      </div>
+    </div>
+  );
+};
+
+const RelatedProductSection = ({ className, productList }) => {
+  return (
+    <div className={className}>
+      <p className="text-3xl">Related Products</p>
+      <Component.Default.DottedDivider className={"my-6"} />
+      <div className="grid grid-cols-4 gap-4">
+        {productList.slice(0, 8).map((product) => (
+          <ProductCard product={product} />
+        ))}
       </div>
     </div>
   );
