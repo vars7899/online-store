@@ -1,4 +1,4 @@
-import { Button, IconButton, Image, Progress, Select, Tag } from "@chakra-ui/react";
+import { Button, Divider, IconButton, Image, Progress, Select, Tag } from "@chakra-ui/react";
 import * as Layout from "../../layouts";
 import * as Component from "../../components";
 import { IconChevronLeft, IconHeart, IconShoppingBagPlus, IconUserCircle } from "@tabler/icons-react";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import * as storeThunkAction from "../../redux/thunkActions/storeActions";
 import * as storeAction from "../../redux/features/storeSlice";
 import toast from "react-hot-toast";
+import { DateTime } from "luxon";
 
 export const ProductDetailsScreen = () => {
   // States
@@ -212,6 +213,22 @@ export const ProductDetailsScreen = () => {
           </div>
         </div>
         <ProductRating product={selectedProduct} />
+        <Divider my={6} />
+        <ProductReviews
+          reviews={[
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+            ...selectedProduct.reviews,
+          ]}
+        />
+
         <div className="text-3xl my-16">
           <p>Related Products</p>
           <Component.Default.CustomBorderLine />
@@ -290,6 +307,27 @@ const ProductRating = ({ product }) => {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ProductReviews = ({ reviews }) => {
+  return (
+    <div className="grid grid-cols-[1fr,_400px]">
+      <div>
+        {reviews.map((review) => (
+          <div className="mb-4 pb-4 border-b-[1px]">
+            <div className="flex items-center justify-between text-gold">
+              <Rating initialRating={review.rating} {...ReactRatingProps(20)} />
+              <p className="text-gray-400">{DateTime.fromISO(review.createdAt).toLocaleString(DateTime.DATE_MED)}</p>
+            </div>
+            <p className="text-gray-400 my-1">
+              {review.user.firstName} {review.user.lastName}
+            </p>
+            <p>{review.comment}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
