@@ -41,6 +41,10 @@ export const ProductDetailsScreen = () => {
     }
   }, [dispatch, isError, message]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [productId]);
+
   // Handle add/remove product to/remove user cart
   const HandleProductUserCartButton = (product) => {
     if (!productId) return;
