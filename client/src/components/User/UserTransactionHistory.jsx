@@ -4,7 +4,6 @@ import { DateTime } from "luxon";
 import { IconCreditCard } from "@tabler/icons-react";
 
 export const UserTransactionHistory = ({ transactions }) => {
-  transactions = [...transactions, ...transactions, ...transactions];
   const [itemOffset, setItemOffset] = useState(0);
   const ITEMS_PER_PAGE = 10;
 

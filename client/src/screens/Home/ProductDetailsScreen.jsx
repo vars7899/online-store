@@ -13,6 +13,7 @@ import * as storeThunkAction from "../../redux/thunkActions/storeActions";
 import * as storeAction from "../../redux/features/storeSlice";
 import toast from "react-hot-toast";
 import { DateTime } from "luxon";
+import ReactPaginate from "react-paginate";
 
 export const ProductDetailsScreen = () => {
   // States
@@ -170,48 +171,6 @@ export const ProductDetailsScreen = () => {
             </div>
           </div>
         </div>
-        <div className="my-16">
-          <p className="text-3xl">Customer Feedback</p>
-          <Component.Default.CustomBorderLine />
-          <div className="grid grid-cols-[400px,_1fr] gap-8">
-            <div>
-              <div className="flex items-center justify-between">
-                <Rating initialRating={selectedProduct?.averageRating} readonly {...ReactRatingProps} />
-                <p className="text-lg font-semibold">{selectedProduct?.averageRating} / 5</p>
-              </div>
-              <p className="my-2">{selectedProduct?.numReviews} Total Reviews</p>
-              <div className="h-[275px]">
-                <ResponsiveContainer width={"100%"} height={"100%"}>
-                  <BarChart height={400} width={400} data={ReviewData} layout="vertical" barCategoryGap={6}>
-                    <XAxis type="number" hide />
-                    <YAxis type="category" width={50} dataKey={"name"} />
-                    <Bar dataKey={"averageRating"} background={{ fill: "#f3f4f6", stroke: "#e5e7eb" }} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {Array.from({ length: 10 }).map(() => (
-                <div className="bg-gray-50 rounded-xl p-6 h-min">
-                  <div className="flex items-center justify-start">
-                    <IconUserCircle size={48} strokeWidth={1} />
-                    <div className="ml-2">
-                      <p className="">Mark Robinson</p>
-                      <p className="text-gray-500 text-sm">53 minutes ago</p>
-                    </div>
-                  </div>
-                  <Rating initialRating={3.5} readonly {...ReactRatingProps} className="my-2" />
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi consequatur distinctio dolor.
-                    Aspernatur veniam cupiditate eaque nesciunt maxime veritatis debitis magni cum quisquam sed. Rem,
-                    repellendus totam? Atque itaque ipsum necessitatibus quo velit. Ex reiciendis ipsum dolorem soluta!
-                    Maxime, aut.
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
         <ProductRating product={selectedProduct} />
         <Divider my={6} />
         <ProductReviews
@@ -313,21 +272,54 @@ const ProductRating = ({ product }) => {
 };
 
 const ProductReviews = ({ reviews }) => {
+  const [itemOffset, setItemOffset] = useState(0);
+  const REVIEW_PER_PAGE = 4;
+
+  const endOffset = itemOffset + REVIEW_PER_PAGE;
+  const currentReviews = reviews.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(reviews.length / REVIEW_PER_PAGE);
+
+  const handlePageClick = (e) => {
+    const newOffset = (e.selected * REVIEW_PER_PAGE) % reviews.length;
+    setItemOffset(newOffset);
+  };
+
   return (
     <div className="grid grid-cols-[1fr,_400px]">
       <div>
-        {reviews.map((review) => (
-          <div className="mb-4 pb-4 border-b-[1px]">
-            <div className="flex items-center justify-between text-gold">
-              <Rating initialRating={review.rating} {...ReactRatingProps(20)} />
-              <p className="text-gray-400">{DateTime.fromISO(review.createdAt).toLocaleString(DateTime.DATE_MED)}</p>
+        <div>
+          {currentReviews.map((review) => (
+            <div className="mb-4 pb-4 border-b-[1px]">
+              <div className="flex items-center justify-between text-gold">
+                <Rating initialRating={review.rating} {...ReactRatingProps(20)} />
+                <p className="text-gray-400">{DateTime.fromISO(review.createdAt).toLocaleString(DateTime.DATE_MED)}</p>
+              </div>
+              <p className="text-gray-400 my-1">
+                {review.user.firstName} {review.user.lastName}
+              </p>
+              <p>{review.comment}</p>
             </div>
-            <p className="text-gray-400 my-1">
-              {review.user.firstName} {review.user.lastName}
-            </p>
-            <p>{review.comment}</p>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="flex items-center justify-center">
+          {reviews.length > REVIEW_PER_PAGE && (
+            <ReactPaginate
+              className="paginate"
+              activeClassName="paginate-item active-paginate-item"
+              breakClassName="paginate-item"
+              pageClassName="paginate-item"
+              nextClassName="paginate-move-item"
+              previousClassName="paginate-move-item"
+              breakLabel="..."
+              nextLabel=">"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="<"
+              renderOnZeroPageCount={null}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
