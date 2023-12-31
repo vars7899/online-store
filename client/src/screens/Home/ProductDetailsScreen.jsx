@@ -1,12 +1,11 @@
 import { Button, Divider, IconButton, Image, Progress, Select, Tag } from "@chakra-ui/react";
 import * as Layout from "../../layouts";
 import * as Component from "../../components";
-import { IconChevronLeft, IconHeart, IconShoppingBagPlus, IconUserCircle } from "@tabler/icons-react";
+import { IconChevronLeft, IconHeart, IconShoppingBagPlus } from "@tabler/icons-react";
 import Rating from "react-rating";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductImage from "../../assets/p1.png";
 import ReactRatingProps from "../../ReactRatingProps";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import * as storeThunkAction from "../../redux/thunkActions/storeActions";
@@ -41,8 +40,18 @@ export const ProductDetailsScreen = () => {
   }, [dispatch, isError, message]);
 
   // Handle add/remove product to/remove user cart
-  const HandleProductUserCartButton = () => {
+  const HandleProductUserCartButton = (product) => {
     if (!productId) return;
+    // Item currently unavailable
+    if (product.qty <= 0)
+      return toast(`${product.name} is currently out of stock`, {
+        icon: "😞",
+      });
+    // Item asked is greater than current stock available
+    if (cartQty > product.qty)
+      return toast(`Only ${product.qty} of ${product.name} is available`, {
+        icon: "😞",
+      });
     dispatch(storeThunkAction.ADD_PRODUCT_TO_USER_CART({ productId, qty: { qty: cartQty } }));
     setCartQty(1);
   };
@@ -62,13 +71,6 @@ export const ProductDetailsScreen = () => {
     }
   };
 
-  const ReviewData = [
-    { name: "5 star", averageRating: 67 },
-    { name: "4 star", averageRating: 95 },
-    { name: "3 star", averageRating: 7 },
-    { name: "2 star", averageRating: 3 },
-    { name: "1 star", averageRating: 8 },
-  ];
   if (!selectedProduct && isLoading) {
     return <p>Loading....</p>;
   }
@@ -93,12 +95,14 @@ export const ProductDetailsScreen = () => {
             <p className="text-lg mb-4 text-yellow-500 capitalize">{selectedProduct.supplier}</p>
             <p className="text-3xl font-semibold tracking-wide my-2">{selectedProduct.name}</p>
             <div className="my-2 flex items-center justify-start">
-              <Rating
-                initialRating={selectedProduct?.averageRating}
-                readonly
-                {...ReactRatingProps(20)}
-                className="mt-2"
-              />
+              <div className="text-gold">
+                <Rating
+                  initialRating={selectedProduct?.averageRating}
+                  readonly
+                  {...ReactRatingProps(20)}
+                  className="mt-2"
+                />
+              </div>
               <p className="ml-2">{selectedProduct?.numReviews} Reviews</p>
             </div>
             <p className="mr-2 text-3xl my-4">{selectedProduct.price.toFixed(2)} CAD</p>
@@ -121,7 +125,7 @@ export const ProductDetailsScreen = () => {
                 colorScheme="brandBlack"
                 leftIcon={<IconShoppingBagPlus />}
                 size={"lg"}
-                onClick={HandleProductUserCartButton}
+                onClick={() => HandleProductUserCartButton(selectedProduct)}
                 isLoading={isLoading}
               >
                 Add To Cart
@@ -173,20 +177,7 @@ export const ProductDetailsScreen = () => {
         </div>
         <ProductRating product={selectedProduct} />
         <Divider my={6} />
-        <ProductReviews
-          reviews={[
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-            ...selectedProduct.reviews,
-          ]}
-        />
+        <ProductReviews reviews={selectedProduct.reviews} />
 
         <div className="text-3xl my-16">
           <p>Related Products</p>
@@ -285,7 +276,7 @@ const ProductReviews = ({ reviews }) => {
   };
 
   return (
-    <div className="grid grid-cols-[1fr,_400px]">
+    <div className="grid grid-cols-[1fr,_400px] gap-12">
       <div>
         <div>
           {currentReviews.map((review) => (
@@ -320,6 +311,12 @@ const ProductReviews = ({ reviews }) => {
             />
           )}
         </div>
+      </div>
+      <div>
+        <p className="mb-4">Your Review</p>
+        <Button variant={"outline"} w="full">
+          Write A Review
+        </Button>
       </div>
     </div>
   );
