@@ -1,18 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { adminServices } from "../services";
-
-const getErrorResponseMessage = (error) => {
-  const message =
-    (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-  return message;
-};
+import { thunkRejectWithMessage } from "../thunkRejectWithMessage";
 
 // >> getAllStoreOrders
 export const getAllStoreOrders = createAsyncThunk("dashboard/getAllStoreOrders", async (data, thunkAPI) => {
   try {
     return await adminServices.getAllStoreOrders(data);
   } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorResponseMessage(error));
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
 // >> getOrderDetails
@@ -20,7 +15,7 @@ export const getOrderDetails = createAsyncThunk("dashboard/getOrderDetails", asy
   try {
     return await adminServices.getOrderDetails(data);
   } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorResponseMessage(error));
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
 // >> updateOrderState
@@ -28,7 +23,7 @@ export const updateOrderState = createAsyncThunk("dashboard/updateOrderState", a
   try {
     return await adminServices.updateOrderState(data);
   } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorResponseMessage(error));
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
 // >> getAllStoreUsers
@@ -36,7 +31,7 @@ export const getAllStoreUsers = createAsyncThunk("dashboard/getAllStoreUsers", a
   try {
     return await adminServices.getAllUsers(data);
   } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorResponseMessage(error));
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
 // >> getOrdersStats
@@ -44,6 +39,6 @@ export const getOrdersStats = createAsyncThunk("dashboard/getOrdersStats", async
   try {
     return await adminServices.getOrdersStats(data);
   } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorResponseMessage(error));
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });

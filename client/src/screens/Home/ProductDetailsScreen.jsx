@@ -1,7 +1,7 @@
 import { Button, Divider, IconButton, Image, Progress, Select, Tag } from "@chakra-ui/react";
 import * as Layout from "../../layouts";
 import * as Component from "../../components";
-import { IconChevronLeft, IconHeart, IconShoppingBagPlus } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronLeft, IconChevronUp, IconHeart, IconShoppingBagPlus } from "@tabler/icons-react";
 import Rating from "react-rating";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductImage from "../../assets/p1.png";
@@ -14,10 +14,12 @@ import toast from "react-hot-toast";
 import { DateTime } from "luxon";
 import ReactPaginate from "react-paginate";
 import ProductCard from "../../components/Home/ProductCard";
+import { motion } from "framer-motion";
 
 export const ProductDetailsScreen = () => {
   // States
   const [cartQty, setCartQty] = useState(1);
+  const [expandReviews, setExpandReviews] = useState(false);
   // Product Id from the params
   const { productId } = useParams();
   const navigate = useNavigate();
@@ -84,7 +86,7 @@ export const ProductDetailsScreen = () => {
     return (
       <Layout.Basic>
         <div className="grid grid-cols-[1.5fr,_1fr] my-6 gap-8">
-          <div className="bg-gray-50 rounded-2xl p-4 h-full">
+          <div className="bg-neutral-100 rounded-2xl p-4 h-full">
             <IconButton
               variant={"outline"}
               icon={<IconChevronLeft className="text-gray-300" />}
@@ -177,14 +179,21 @@ export const ProductDetailsScreen = () => {
                 productPropertyName={"length"}
                 propertyValue={selectedProduct?.dimension?.length.toFixed(2)}
                 propertyUnit={"cm"}
+                onClick={() => navigate(`/components/${product?._id}`)}
               />
             </div>
           </div>
         </div>
-        <ProductRating product={selectedProduct} />
-        <Divider my={6} />
-        <ProductReviews reviews={selectedProduct.reviews} />
-        <RelatedProductSection className="" productList={productList} />
+        <ProductSpecification />
+        <ProductRating
+          product={selectedProduct}
+          className="mt-12"
+          onClick={() => setExpandReviews((prev) => !prev)}
+          expandReviews={expandReviews}
+        />
+        <Component.Default.DottedDivider className={"my-6"} />
+        <ProductReviews reviews={selectedProduct.reviews} expandReviews={expandReviews} />
+        <RelatedProductSection className="my-12" productList={productList} />
       </Layout.Basic>
     );
 };
@@ -200,7 +209,16 @@ const ProductPackageDetailsPair = ({ productPropertyName, propertyValue, propert
   );
 };
 
-const ProductRating = ({ product }) => {
+const ProductSpecification = ({ className }) => {
+  return (
+    <div className={className}>
+      <p className="text-3xl">Specification</p>
+      <Component.Default.DottedDivider className={"my-6"} />
+    </div>
+  );
+};
+
+const ProductRating = ({ className, product, onClick, expandReviews }) => {
   // Here index + 1 is equal to the rating and value is equal to num reviews
   const [typeNumReviews, setTypeNumReviews] = useState([0, 0, 0, 0, 0]);
 
@@ -229,8 +247,18 @@ const ProductRating = ({ product }) => {
   }
 
   return (
-    <div>
-      <p className="text-2xl mb-4">Rating & Reviews</p>
+    <div className={className}>
+      <div className="flex items-center justify-between">
+        <p className="text-3xl">Rating & Reviews</p>
+        <motion.div whileTap={{ scale: 0.7 }} onClick={onClick}>
+          {expandReviews ? (
+            <IconChevronUp size={40} strokeWidth={1.5} className="cursor-pointer" />
+          ) : (
+            <IconChevronDown size={40} strokeWidth={1.5} className="cursor-pointer" />
+          )}
+        </motion.div>
+      </div>
+      <Component.Default.DottedDivider className={"my-6"} />
       <div className="flex">
         <div className="border-r-[1px] pl-2 pr-20">
           <p>
@@ -264,7 +292,7 @@ const ProductRating = ({ product }) => {
   );
 };
 
-const ProductReviews = ({ reviews }) => {
+const ProductReviews = ({ reviews, expandReviews }) => {
   const [itemOffset, setItemOffset] = useState(0);
   const REVIEW_PER_PAGE = 4;
 
@@ -277,51 +305,54 @@ const ProductReviews = ({ reviews }) => {
     setItemOffset(newOffset);
   };
 
-  return (
-    <div className="grid grid-cols-[1fr,_400px] gap-12">
-      <div>
+  if (expandReviews)
+    return (
+      <div className="grid grid-cols-[1fr,_400px] gap-12">
         <div>
-          {currentReviews.map((review) => (
-            <div className="mb-4 pb-4 border-b-[1px]">
-              <div className="flex items-center justify-between text-gold">
-                <Rating initialRating={review.rating} {...ReactRatingProps(20)} />
-                <p className="text-gray-400">{DateTime.fromISO(review.createdAt).toLocaleString(DateTime.DATE_MED)}</p>
+          <div>
+            {currentReviews.map((review) => (
+              <div className="mb-4 pb-4 border-b-[1px]">
+                <div className="flex items-center justify-between text-gold">
+                  <Rating initialRating={review.rating} {...ReactRatingProps(20)} />
+                  <p className="text-gray-400">
+                    {DateTime.fromISO(review.createdAt).toLocaleString(DateTime.DATE_MED)}
+                  </p>
+                </div>
+                <p className="text-gray-400 my-1">
+                  {review.user.firstName} {review.user.lastName}
+                </p>
+                <p>{review.comment}</p>
               </div>
-              <p className="text-gray-400 my-1">
-                {review.user.firstName} {review.user.lastName}
-              </p>
-              <p>{review.comment}</p>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div className="flex items-center justify-center">
+            {reviews.length > REVIEW_PER_PAGE && (
+              <ReactPaginate
+                className="paginate"
+                activeClassName="paginate-item active-paginate-item"
+                breakClassName="paginate-item"
+                pageClassName="paginate-item"
+                nextClassName="paginate-move-item"
+                previousClassName="paginate-move-item"
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+              />
+            )}
+          </div>
         </div>
-        <div className="flex items-center justify-center">
-          {reviews.length > REVIEW_PER_PAGE && (
-            <ReactPaginate
-              className="paginate"
-              activeClassName="paginate-item active-paginate-item"
-              breakClassName="paginate-item"
-              pageClassName="paginate-item"
-              nextClassName="paginate-move-item"
-              previousClassName="paginate-move-item"
-              breakLabel="..."
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={5}
-              pageCount={pageCount}
-              previousLabel="<"
-              renderOnZeroPageCount={null}
-            />
-          )}
+        <div>
+          <p className="mb-4">Your Review</p>
+          <Button variant={"outline"} w="full">
+            Write A Review
+          </Button>
         </div>
       </div>
-      <div>
-        <p className="mb-4">Your Review</p>
-        <Button variant={"outline"} w="full">
-          Write A Review
-        </Button>
-      </div>
-    </div>
-  );
+    );
 };
 
 const RelatedProductSection = ({ className, productList }) => {

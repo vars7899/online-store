@@ -1,6 +1,7 @@
 import * as Component from "../../../components";
 import { DateTime } from "luxon";
 import {
+  Button,
   Divider,
   FormControl,
   FormHelperText,
@@ -12,9 +13,13 @@ import {
   Tag,
   Textarea,
 } from "@chakra-ui/react";
-import { IconPhotoUp } from "@tabler/icons-react";
+import { IconFileUpload, IconPhotoUp, IconRestore } from "@tabler/icons-react";
+import { useDispatch, useSelector } from "react-redux";
 
-export const ProductDetailsForm = ({ product, categoryList }) => {
+export const ProductDetailsForm = ({ categoryList }) => {
+  const dispatch = useDispatch();
+  const { selectedProduct: product } = useSelector((state) => state.dashboard);
+
   if (!product) {
     return <p>Loading...</p>;
   } else {
@@ -72,6 +77,14 @@ export const ProductDetailsForm = ({ product, categoryList }) => {
           </div>
         </div>
         <div className="">
+          <div className="flex items-center justify-end">
+            <Button mr={2} variant={"outline"} leftIcon={<IconRestore strokeWidth={1.5} />}>
+              Reset
+            </Button>
+            <Button variant={"outline"} leftIcon={<IconFileUpload strokeWidth={1.5} />}>
+              Save
+            </Button>
+          </div>
           <Component.Default.SettingsPairContainer
             title={"Product Details"}
             desc={

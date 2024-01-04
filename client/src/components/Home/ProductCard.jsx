@@ -7,10 +7,19 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-neutral-100 p-6 cursor-pointer flex flex-col justify-between">
+    <div
+      className="bg-neutral-100 p-6 cursor-pointer flex flex-col justify-between"
+      onClick={() => navigate(`/components/${product?._id}`)}
+    >
       <div>
         <div className="flex items-center justify-center">
-          <Image src={product.img.url} boxSize="300" objectFit={"contain"} />
+          <Image
+            src={product.img.url}
+            boxSize="300"
+            objectFit={"contain"}
+            loading="lazy"
+            fallback={<div className="bg-neutral-500"></div>}
+          />
         </div>
         <p className="text-xs uppercase my-1 text-neutral-400 rounded-full whitespace-nowrap w-min truncate">
           {product.supplier}
@@ -23,7 +32,6 @@ const ProductCard = ({ product }) => {
         initial={{ width: "50%" }}
         whileHover={{ width: "100%" }}
         whileTap={{ scale: 0.98 }}
-        onClick={() => navigate(`/components/${product?._id}`)}
       >
         <p className="tracking-wide mr-2 whitespace-nowrap">View Details</p>
         <IconArrowUpRight strokeWidth={1} />
