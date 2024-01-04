@@ -7,6 +7,11 @@ export const createNewProductCategory = async (formData) => {
   return data;
 };
 
+export const updateProductDetails = async ({ productId, formData }) => {
+  const { data } = await axios.post(API + "/" + productId, formData);
+  return data;
+};
+
 export const getAllProducts = async () => {
   const { data } = await axios.get(API);
   return data;
@@ -30,3 +35,5 @@ export const createProductReview = async ({ productId, formData }) => {
   const { data } = await axios.post(API + "/review/" + productId, formData);
   return data;
 };
+
+

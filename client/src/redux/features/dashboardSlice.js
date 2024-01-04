@@ -327,6 +327,17 @@ const dashboardSlice = createSlice({
       $fulfilledHandler(state, action);
       state.stats.paymentMethod = action.payload.paymentMethodStat;
     });
+    // >> getOrdersStats
+    builder.addCase(DTA.updateProductDetails.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(DTA.updateProductDetails.rejected, (state, action) => {
+      $rejectionHandler(state, action);
+    });
+    builder.addCase(DTA.updateProductDetails.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
+      toast.success(action.payload.message);
+    });
   },
 });
 

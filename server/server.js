@@ -15,6 +15,7 @@ const { Server } = require("socket.io");
 
 const app = express();
 // TODO -- add endpoint when deployed
+// "http://localhost:5173"
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 
 const server = http.createServer(app);

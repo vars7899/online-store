@@ -4,3 +4,4 @@ export * as authServices from "./auth";
 export * as userServices from "./user";
 export * as adminServices from "./admin";
 export * as transactionServices from "./transaction";
+export * as productServices from "./product";

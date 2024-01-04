@@ -4,7 +4,7 @@ import * as categoryService from "../services/category";
 import * as userService from "../services/user";
 import * as addressService from "../services/address";
 import { orderServices } from "../services";
-import { thunkRejectMessage } from "../thunkRejectWithMessage";
+
 
 // GET_ALL_STORE_PRODUCTS
 export const GET_ALL_STORE_PRODUCTS = createAsyncThunk("store/getAllStoreProducts", async (thunkAPI) => {

@@ -4,6 +4,27 @@ const mongoose = require("mongoose");
 const Category = require("../models/category");
 const getDataUri = require("../config/dataURI");
 const cloudinary = require("cloudinary");
+const cloudinaryFunctions = require("../config/cloudinaryFunctions");
+
+async function checkIfValidCategory(categoryId) {
+  if (!mongoose.isValidObjectId(categoryId) || !(await Category.findById(categoryId))) {
+    throw createHttpError(400, "Invalid or missing category");
+  }
+}
+
+const checkProductRequiredDetails = (givenDetails) => {
+  const { name, desc, length, width, height, weight, price, qty, supplier, featured, category } = givenDetails;
+
+  if (!name || !desc || !supplier || !category) {
+    throw createHttpError(400, "Missing one or more required field(s).");
+  }
+  if (!length || !width || !height || !weight) {
+    throw createHttpError(
+      400,
+      "Missing one or more package details. Please make sure dimension and weight are not zero"
+    );
+  }
+};
 
 const createNewProduct = async (req, res, next) => {
   try {
@@ -143,6 +164,44 @@ const removeProduct = async (req, res, next) => {
 
 const updateProductDetails = async (req, res, next) => {
   try {
+    const { name, desc, length, width, height, weight, price, qty, supplier, featured, category } = req.body;
+
+    checkProductRequiredDetails(req.body);
+    checkIfValidCategory(category);
+
+    const existingProductDetails = await Product.findById(req.params.productId);
+
+    const setFields = {
+      name,
+      desc,
+      dimension: { length, width, height },
+      price,
+      qty,
+      weight,
+      supplier,
+      featured,
+      category,
+    };
+
+    if (req.file) {
+      // Upload New and delete older Image
+      cloudinaryFunctions.uploadFile(req.file);
+      cloudinaryFunctions.destroyFile(existingProductDetails.img.publicId);
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.productId,
+      {
+        $set: setFields,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Product Details updated successfully",
+      product,
+    });
   } catch (err) {
     next(err);
   }
