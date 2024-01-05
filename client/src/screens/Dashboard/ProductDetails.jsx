@@ -7,8 +7,10 @@ import { toast } from "react-hot-toast";
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Tag, Divider, Image, Button } from "@chakra-ui/react";
 import { IconAlertTriangle, IconRefresh } from "@tabler/icons-react";
 import { DateTime } from "luxon";
+import { dashboardThunkActions } from "../../redux/thunkActions";
 
 const ProductReviewAnalysis = lazy(() => import("../../components/Dashboard/Product/ProductReviewAnalysis"));
+const SalesAnalyticsSection = lazy(() => import("../../components/Dashboard/Product/SalesAnalytics"));
 
 export const ProductDetails = () => {
   const params = useParams();
@@ -18,6 +20,7 @@ export const ProductDetails = () => {
   const $initPage = () => {
     dispatch(GET_PRODUCT_DETAILS(params.productId));
     dispatch(GET_ALL_PRODUCT_CATEGORIES());
+    dispatch(dashboardThunkActions.getAllOrdersWithGivenProduct(params.productId));
   };
 
   useEffect(() => {
@@ -55,10 +58,14 @@ export const ProductDetails = () => {
                 />
               </TabPanel>
               <TabPanel>
-                <Suspense>{selectedProduct && <ProductReviewAnalysis product={selectedProduct} />}</Suspense>
+                <Suspense>
+                  <ProductReviewAnalysis product={selectedProduct} />
+                </Suspense>
               </TabPanel>
               <TabPanel>
-                <p>three!</p>
+                <Suspense>
+                  <SalesAnalyticsSection product={selectedProduct} />
+                </Suspense>
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -77,7 +84,7 @@ const ProductDetailSummary = ({ selectedProduct, $initPage, isLoading }) => {
             src={selectedProduct?.img.url}
             borderRadius={"lg"}
             width={300}
-            height={"full"}
+            height={250}
             alt={selectedProduct.name}
             objectFit={"cover"}
           />

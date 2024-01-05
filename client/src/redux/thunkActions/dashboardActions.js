@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { adminServices, productServices } from "../services";
+import { adminServices, orderServices, productServices } from "../services";
 import { thunkRejectWithMessage } from "../thunkRejectWithMessage";
 
 // >> getAllStoreOrders
@@ -51,3 +51,15 @@ export const updateProductDetails = createAsyncThunk("dashboard/updateProductDet
     thunkRejectWithMessage(error, thunkAPI);
   }
 });
+
+// >> getAllOrdersWithGivenProduct
+export const getAllOrdersWithGivenProduct = createAsyncThunk(
+  "dashboard/getAllOrdersWithGivenProduct",
+  async (data, thunkAPI) => {
+    try {
+      return await orderServices.getAllOrdersWithGivenProduct(data);
+    } catch (error) {
+      thunkRejectWithMessage(error, thunkAPI);
+    }
+  }
+);

@@ -19,6 +19,11 @@ export const updateOrderPayment = async ({ orderId, formData }) => {
   return data;
 };
 
+export const getAllOrdersWithGivenProduct = async (formData) => {
+  const { data } = await axios.get(API + "/with-product/" + formData);
+  return data;
+};
+
 export const getAllUserOrders = async (formData) => {
   let url_string = API + "?";
 

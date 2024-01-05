@@ -13,6 +13,7 @@ const initialState = {
   selectedCategoryProducts: null,
   productList: [],
   selectedProduct: null,
+  orderWithSelectedProduct: [],
   newProductSuccess: false,
   // << Order related states
   orderList: [],
@@ -338,6 +339,17 @@ const dashboardSlice = createSlice({
       $fulfilledHandler(state, action);
       state.selectedProduct = action.payload.product;
       toast.success(action.payload.message);
+    });
+    // >> getAllOrdersWithGivenProduct
+    builder.addCase(DTA.getAllOrdersWithGivenProduct.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(DTA.getAllOrdersWithGivenProduct.rejected, (state, action) => {
+      $rejectionHandler(state, action);
+    });
+    builder.addCase(DTA.getAllOrdersWithGivenProduct.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
+      state.orderWithSelectedProduct = action.payload.orderList;
     });
   },
 });

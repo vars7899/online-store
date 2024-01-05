@@ -4,7 +4,7 @@ const functions = require("../functions");
 const ULID = require("ulid");
 const Order = require("../models/order");
 const { Address, Product } = require("../models");
-const { isValidObjectId } = require("mongoose");
+const { isValidObjectId, default: mongoose } = require("mongoose");
 
 const getOrderCharges = async (req, res, next) => {
   try {
@@ -267,6 +267,26 @@ const updateOrderState = async (req, res, next) => {
   }
 };
 
+const getAllOrdersWithGivenProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+
+    if (!productId || !mongoose.isValidObjectId(productId)) {
+      throw createHttpError(404, "Unknown product, No such product exist. Please try again with a different product");
+    }
+
+    const orderList = await Order.find({ orderItems: { $elemMatch: { product: productId } } });
+
+    res.status(200).json({
+      success: true,
+      message: "List of orders",
+      orderList,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createNewOrder,
   getAllUserOrders,
@@ -276,4 +296,5 @@ module.exports = {
   getAllStoreOrders,
   getCompleteOrderDetails,
   updateOrderState,
+  getAllOrdersWithGivenProduct,
 };
