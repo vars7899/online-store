@@ -9,7 +9,8 @@ import { IconAlertTriangle, IconRefresh } from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { dashboardThunkActions } from "../../redux/thunkActions";
 
-const ProductReviewAnalysis = lazy(() => import("../../components/Dashboard/Product/ProductReviewAnalysis"));
+const CustomerReviewAnalysisSection = lazy(() => import("../../components/Dashboard/Product/CustomerReviewAnalysis"));
+const DangerSettingsSection = lazy(() => import("../../components/Dashboard/Product/DangerSettings"));
 const SalesAnalyticsSection = lazy(() => import("../../components/Dashboard/Product/SalesAnalytics"));
 
 export const ProductDetails = () => {
@@ -40,9 +41,9 @@ export const ProductDetails = () => {
         <>
           <ProductDetailSummary selectedProduct={selectedProduct} $initPage={$initPage} isLoading={isLoading} />
           <Divider my={4} />
-          <Tabs size={"sm"} variant={"soft-rounded"} colorScheme="gray">
+          <Tabs size={"sm"} variant={"soft-rounded"} colorScheme="blue">
             <TabList>
-              <Tab>Product Details</Tab>
+              <Tab> Product Details</Tab>
               <Tab>Review Analytics</Tab>
               <Tab>Sales Analytics</Tab>
               <Tab>
@@ -59,12 +60,17 @@ export const ProductDetails = () => {
               </TabPanel>
               <TabPanel>
                 <Suspense>
-                  <ProductReviewAnalysis product={selectedProduct} />
+                  <CustomerReviewAnalysisSection product={selectedProduct} />
                 </Suspense>
               </TabPanel>
               <TabPanel>
                 <Suspense>
                   <SalesAnalyticsSection product={selectedProduct} />
+                </Suspense>
+              </TabPanel>
+              <TabPanel>
+                <Suspense>
+                  <DangerSettingsSection product={selectedProduct} />
                 </Suspense>
               </TabPanel>
             </TabPanels>

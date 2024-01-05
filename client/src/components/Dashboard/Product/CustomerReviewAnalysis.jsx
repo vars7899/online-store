@@ -6,7 +6,7 @@ import ReactRatingProps from "../../../ReactRatingProps";
 import { DateTime } from "luxon";
 import { useState } from "react";
 
-const ProductReviewAnalysis = ({ product }) => {
+const CustomerReviewAnalysis = ({ product }) => {
   const [reviewType, setReviewType] = useState(() => {
     let positive = 0;
     let negative = 0;
@@ -120,4 +120,4 @@ const ReviewSummaryBox = ({ title, value, percentageChange }) => {
   );
 };
 
-export default ProductReviewAnalysis;
+export default CustomerReviewAnalysis;

@@ -54,6 +54,7 @@ const ProductDetailsSection = ({ product, categoryList }) => {
     },
     onSubmit: (values) => {
       const productFormData = new FormData();
+
       productFormData.append("name", values.name);
       productFormData.append("desc", values.desc);
       productFormData.append("category", values.category);

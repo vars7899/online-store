@@ -172,24 +172,47 @@ const removeProduct = async (req, res, next) => {
 
 const updateProductDetails = async (req, res, next) => {
   try {
-    const { name, desc, length, width, height, weight, price, qty, supplier, featured, category } = req.body;
+    const {
+      name,
+      desc,
+      length,
+      width,
+      height,
+      weight,
+      price,
+      qty,
+      supplier,
+      featured,
+      category,
+      isActive,
+      buyingLimit,
+    } = req.body;
 
-    checkProductRequiredDetails(req.body);
-    checkIfValidCategory(category);
+    // checkProductRequiredDetails(req.body);
+    // checkIfValidCategory(category);
 
     const existingProductDetails = await Product.findById(req.params.productId);
 
     let setFields = {
-      name,
-      desc,
-      dimension: { length, width, height },
-      price,
-      qty,
-      weight,
-      supplier,
-      featured,
-      category,
+      ...(name && { name }),
+      ...(desc && { desc }),
+      ...((length || height || width) && {
+        dimension: {
+          ...(length && { length }),
+          ...(width && { width }),
+          ...(height && { height }),
+        },
+      }),
+      ...(price && { price }),
+      ...(qty && { qty }),
+      ...(weight && { weight }),
+      ...(supplier && { supplier }),
+      ...(featured && { featured }),
+      ...(category && { category }),
+      ...(isActive && { isActive }),
+      ...(buyingLimit && { buyingLimit }),
     };
+
 
     if (req.file) {
       // Upload New and delete older Image

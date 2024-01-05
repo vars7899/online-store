@@ -27,7 +27,7 @@ export const BasicTable = ({ data, columns }) => {
     <div>
       <div className="flex items-center justify-between mb-2 rounded-lg">
         <InputGroup size="md" rounded={"lg"}>
-          <InputLeftElement className="InputLeft" pointerEvents="none" children={<IconSearch />} size="xs" />
+          <InputLeftElement className="InputLeft" pointerEvents="none" children={<IconSearch size={16} />} size="xs" />
           <Input
             className="Input"
             variant="outline"
@@ -35,14 +35,15 @@ export const BasicTable = ({ data, columns }) => {
             placeholder={`Search`}
             maxW={"md"}
             onChange={(e) => setFiltering(e.target.value)}
+            fontSize={"sm"}
           />
         </InputGroup>
         <Button
           variant={"ghost"}
           size={"sm"}
           ml={4}
-          leftIcon={<IconFileDownload strokeWidth={1.5} />}
-          colorScheme="accent"
+          leftIcon={<IconFileDownload strokeWidth={1.5} size={18} />}
+          colorScheme="blue"
           px={"8"}
           mr={"2"}
         >
