@@ -14,7 +14,7 @@ export const BreadCrumbList = ({ className }) => {
     <div className={`text-sm text-gray-400 font-medium mb-2 ${className}`}>
       <Breadcrumb>
         {path.map((val) => (
-          <BreadcrumbItem>
+          <BreadcrumbItem key={val}>
             <BreadcrumbLink className="capitalize">{val}</BreadcrumbLink>
           </BreadcrumbItem>
         ))}

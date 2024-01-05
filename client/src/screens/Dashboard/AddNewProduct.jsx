@@ -114,7 +114,7 @@ export const AddNewProduct = () => {
     dispatch(RESET_DASHBOARD());
   }, [isError, message, dispatch]);
 
-  console.log(formData);
+  console.log(productImage);
 
   return (
     <Layout.Dashboard>

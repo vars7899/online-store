@@ -26,6 +26,14 @@ const checkProductRequiredDetails = (givenDetails) => {
   }
 };
 
+async function populateProductWithOtherDetails(productId) {
+  const productExist = await Product.findById(productId).populate({ path: "category reviews" });
+  await productExist.populate({ path: "category.createdBy", select: "firstName lastName email" });
+  await productExist.populate({ path: "reviews.user", select: "firstName lastName email" });
+
+  return productExist;
+}
+
 const createNewProduct = async (req, res, next) => {
   try {
     const { name, desc, length, width, height, weight, price, qty, supplier, featured, categoryId } = req.body;
@@ -171,7 +179,7 @@ const updateProductDetails = async (req, res, next) => {
 
     const existingProductDetails = await Product.findById(req.params.productId);
 
-    const setFields = {
+    let setFields = {
       name,
       desc,
       dimension: { length, width, height },
@@ -185,11 +193,14 @@ const updateProductDetails = async (req, res, next) => {
 
     if (req.file) {
       // Upload New and delete older Image
-      cloudinaryFunctions.uploadFile(req.file);
-      cloudinaryFunctions.destroyFile(existingProductDetails.img.publicId);
+      const imgObject = await cloudinaryFunctions.uploadFile(req.file);
+      setFields = { ...setFields, img: imgObject };
+      await cloudinaryFunctions.destroyFile(existingProductDetails.img.publicId);
     }
 
-    const product = await Product.findByIdAndUpdate(
+    console.log(setFields);
+
+    await Product.findByIdAndUpdate(
       req.params.productId,
       {
         $set: setFields,
@@ -200,7 +211,7 @@ const updateProductDetails = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Product Details updated successfully",
-      product,
+      product: await populateProductWithOtherDetails(req.params.productId),
     });
   } catch (err) {
     next(err);

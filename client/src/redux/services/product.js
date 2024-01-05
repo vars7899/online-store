@@ -8,7 +8,7 @@ export const createNewProductCategory = async (formData) => {
 };
 
 export const updateProductDetails = async ({ productId, formData }) => {
-  const { data } = await axios.post(API + "/" + productId, formData);
+  const { data } = await axios.patch(API + "/" + productId, formData);
   return data;
 };
 

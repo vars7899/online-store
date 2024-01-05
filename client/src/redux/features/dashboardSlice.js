@@ -327,7 +327,7 @@ const dashboardSlice = createSlice({
       $fulfilledHandler(state, action);
       state.stats.paymentMethod = action.payload.paymentMethodStat;
     });
-    // >> getOrdersStats
+    // >> updateProductDetails
     builder.addCase(DTA.updateProductDetails.pending, (state) => {
       state.isLoading = true;
     });
@@ -336,6 +336,7 @@ const dashboardSlice = createSlice({
     });
     builder.addCase(DTA.updateProductDetails.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
+      state.selectedProduct = action.payload.product;
       toast.success(action.payload.message);
     });
   },
