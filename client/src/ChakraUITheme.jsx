@@ -31,6 +31,12 @@ const ChakraUICustomizedTheme = extendTheme({
     black: "#232323",
   },
   components: {
+    Input: {
+      baseStyle: {
+        fontSize: "sm",
+        background: "red.600",
+      },
+    },
     Button: {
       baseStyle: {
         fontWeight: "200",
@@ -46,9 +52,14 @@ const ChakraUICustomizedTheme = extendTheme({
     },
     Skeleton: {
       // TODO -> color not changing
-      defaultProps: {
+      baseStyle: {
         startColor: "#2084d6",
         endColor: "#d60c0c",
+      },
+    },
+    FormLabel: {
+      baseStyle: {
+        fontSize: "sm",
       },
     },
   },

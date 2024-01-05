@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Components } from "../global";
 
-export const Dashboard = ({ children, className }) => {
+export const Dashboard = ({ children, className, isLoading }) => {
   const { expandAdminSideBar } = useSelector((state) => state.app);
 
   return (
@@ -13,7 +13,8 @@ export const Dashboard = ({ children, className }) => {
       <Components.Dashboard.Sidebar />
       <div className="border-l-[1px] h-[100%] overflow-y-scroll">
         <Components.Dashboard.TopBar />
-        <div className="min-h-[calc(100vh-80px)] flex flex-col p-2">{children}</div>
+
+        <div className="min-h-[calc(100vh-80px)] flex flex-col p-4">{children}</div>
       </div>
     </div>
   );

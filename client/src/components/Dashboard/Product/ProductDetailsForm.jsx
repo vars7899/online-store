@@ -1,11 +1,9 @@
 import { Components } from "../../../global";
-import { DateTime } from "luxon";
 import {
   Button,
   Divider,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Image,
   Input,
@@ -16,83 +14,19 @@ import {
 } from "@chakra-ui/react";
 import { IconFileUpload, IconPhotoUp, IconRestore } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
+import { dashboardThunkActions } from "../../../redux/thunkActions";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { dashboardThunkActions } from "../../../redux/thunkActions";
 
 export const ProductDetailsForm = ({ categoryList }) => {
-  const dispatch = useDispatch();
   const { selectedProduct: product } = useSelector((state) => state.dashboard);
-
-  const [newProductImage, setNewProductImage] = useState(null);
-  const [productData, setProductData] = useState();
-  const [productPackageData, setProductPackageData] = useState();
-
-  function $handleUpdateProductDetails(e) {
-    e.preventDefault();
-
-    if (!name) return toast.error("Please fill in all the required details to proceed");
-  }
 
   if (!product) {
     return <p>Loading...</p>;
   } else {
     return (
-      <div className="grid grid-cols-[400px,_1fr] h-[100%] gap-4">
-        <div className="bg-slate-50 p-4 rounded-lg">
-          <Tag className="capitalize" mb={4} colorScheme="blue" variant={"outline"} isTruncated>
-            {product.supplier}
-          </Tag>
-          <div className="mb-4 rounded-lg flex items-center justify-center">
-            <Image src={product.img.url} borderRadius={"lg"} height={"325px"} alt={product.name} objectFit={"cover"} />
-          </div>
-          <Divider mb={4} />
-          <div className="text-sm flex items-center justify-between mb-3">
-            <div>Product ID</div>
-            <div className="capitalize">{product._id}</div>
-          </div>
-          <div className="text-sm flex items-center justify-between mb-3">
-            <div>Created At</div>
-            <div>{DateTime.fromISO(product.createdAt).toLocaleString(DateTime.DATETIME_MED)}</div>
-          </div>
-          <div className="text-sm flex items-center justify-between mb-3">
-            <div>Category ID</div>
-            <div>{product.category._id}</div>
-          </div>
-          <div className="text-sm flex items-center justify-between mb-3">
-            <div>Category Name</div>
-            <Tag className="capitalize" variant={"outline"} colorScheme="blue" size={"sm"}>
-              {product.category.name}
-            </Tag>
-          </div>
-          <div className="text-sm flex items-center justify-between mb-3">
-            <div>Category Owner</div>
-            <div className="capitalize">
-              {product.category.createdBy.firstName} {product.category.createdBy.lastName}
-            </div>
-          </div>
-          <div className="text-sm flex items-center justify-between mb-3">
-            <div>Stock Status</div>
-            <Tag
-              variant={"outline"}
-              colorScheme={product.qty <= 0 ? "red" : product.qty > 10 ? "green" : "yellow"}
-              flex
-              justifyContent={"center"}
-              alignItems={"center"}
-              wordBreak={"keep-all"}
-              size={"sm"}
-            >
-              {product.qty <= 0 ? "Out Of Stock" : product.qty > 10 ? "Available" : "Low On Stock"}
-            </Tag>
-          </div>
-          <div className="text-sm flex items-center justify-between mb-3">
-            <div>Total Sold</div>
-            <div className="capitalize">{product.totalSold}</div>
-          </div>
-        </div>
-
+      <div>
         <ProductDetailsSection product={product} categoryList={categoryList} />
       </div>
     );
@@ -133,9 +67,6 @@ const ProductDetailsSection = ({ product, categoryList }) => {
       productFormData.append("featured", values.featured);
       productFormData.append("file", newProductImage);
 
-      for (const value of productFormData.entries()) {
-        console.log(value);
-      }
       dispatch(dashboardThunkActions.updateProductDetails({ productId: product._id, formData: productFormData }));
     },
     validationSchema: Yup.object({
@@ -156,17 +87,29 @@ const ProductDetailsSection = ({ product, categoryList }) => {
     }),
   });
 
-  console.log(formik.values.featured);
-
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="flex items-center justify-end">
-        <Button mr={2} variant={"outline"} leftIcon={<IconRestore strokeWidth={1.5} />}>
-          Reset
-        </Button>
-        <Button type="submit" variant={"outline"} leftIcon={<IconFileUpload strokeWidth={1.5} />}>
-          Save
-        </Button>
+      <div className="flex items-center justify-between">
+        <p className="uppercase text-gray-400 text-sm">SKU #{product._id}</p>
+        <div>
+          <Button
+            mr={2}
+            variant={"outline"}
+            leftIcon={<IconRestore strokeWidth={1.5} size={16} />}
+            onClick={formik.handleReset}
+            size={"sm"}
+          >
+            Reset
+          </Button>
+          <Button
+            type="submit"
+            variant={"outline"}
+            leftIcon={<IconFileUpload strokeWidth={1.5} size={16} />}
+            size={"sm"}
+          >
+            Update
+          </Button>
+        </div>
       </div>
       <Components.Default.SettingsPairContainer
         title={"Product Details"}
@@ -176,17 +119,30 @@ const ProductDetailsSection = ({ product, categoryList }) => {
       >
         <FormControl isInvalid={formik.errors.name && formik.touched.name}>
           <FormLabel>Product Name</FormLabel>
-          <Input type="text" name="name" value={formik.values.name} onChange={formik.handleChange} />
+          <Input type="text" name="name" value={formik.values.name} onChange={formik.handleChange} fontSize={"sm"} />
           <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
         </FormControl>
         <FormControl mt={4} isInvalid={formik.errors.desc && formik.touched.desc}>
           <FormLabel>Description</FormLabel>
-          <Textarea type="text" minH={"100px"} name="desc" value={formik.values.desc} onChange={formik.handleChange} />
+          <Textarea
+            type="text"
+            minH={"100px"}
+            name="desc"
+            value={formik.values.desc}
+            onChange={formik.handleChange}
+            fontSize={"sm"}
+          />
           <FormErrorMessage>{formik.errors.desc}</FormErrorMessage>
         </FormControl>
         <FormControl mt={4} isInvalid={formik.errors.price && formik.touched.price}>
           <FormLabel>Price</FormLabel>
-          <Input type="number" name="price" value={formik.values.price} onChange={formik.handleChange} />
+          <Input
+            type="number"
+            name="price"
+            value={formik.values.price}
+            onChange={formik.handleChange}
+            fontSize={"sm"}
+          />
           <FormErrorMessage>{formik.errors.price}</FormErrorMessage>
         </FormControl>
         <FormControl mt={4} isInvalid={formik.errors.category && formik.touched.category}>
@@ -197,6 +153,7 @@ const ProductDetailsSection = ({ product, categoryList }) => {
             name="category"
             defaultValue={formik.values.category}
             onChange={formik.handleChange}
+            fontSize={"sm"}
           >
             {categoryList
               ? categoryList.map((category) => (
@@ -210,13 +167,13 @@ const ProductDetailsSection = ({ product, categoryList }) => {
         </FormControl>
         <FormControl mt={4} isInvalid={formik.errors.qty && formik.touched.qty}>
           <FormLabel>Available Stock Quantity</FormLabel>
-          <Input type="number" name="qty" value={formik.values.qty} onChange={formik.handleChange} />
+          <Input type="number" name="qty" value={formik.values.qty} onChange={formik.handleChange} fontSize={"sm"} />
           <FormErrorMessage>{formik.errors.qty}</FormErrorMessage>
         </FormControl>
         <FormControl mt={4}>
           <FormLabel>Product Image</FormLabel>
           <div
-            className="border-[2px] border-dashed rounded-lg min-h-[200px] min-w-[200px] flex flex-col items-center justify-center cursor-pointer"
+            className="border-[2px] border-dashed rounded-lg min-h-[200px] min-w-[200px] flex flex-col items-center justify-center cursor-pointer p-4"
             onClick={() => document.querySelector("#image-select").click()}
           >
             <Input
@@ -261,7 +218,13 @@ const ProductDetailsSection = ({ product, categoryList }) => {
       >
         <FormControl isInvalid={formik.errors.supplier && formik.touched.supplier}>
           <FormLabel>Supplier Name</FormLabel>
-          <Input type="text" name="supplier" value={formik.values.supplier} onChange={formik.handleChange} />
+          <Input
+            type="text"
+            name="supplier"
+            value={formik.values.supplier}
+            onChange={formik.handleChange}
+            fontSize={"sm"}
+          />
           <FormErrorMessage>{formik.errors.supplier}</FormErrorMessage>
         </FormControl>
       </Components.Default.SettingsPairContainer>
@@ -275,23 +238,47 @@ const ProductDetailsSection = ({ product, categoryList }) => {
         <div className="grid grid-cols-3 gap-2">
           <FormControl isInvalid={formik.errors.length && formik.touched.length}>
             <FormLabel>Length (In Cm)</FormLabel>
-            <Input type="number" name="length" value={formik.values.length} onChange={formik.handleChange} />
+            <Input
+              type="number"
+              name="length"
+              value={formik.values.length}
+              onChange={formik.handleChange}
+              fontSize={"sm"}
+            />
             <FormErrorMessage>{formik.errors.length}</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={formik.errors.width && formik.touched.width}>
             <FormLabel>Width (In Cm)</FormLabel>
-            <Input type="number" name="width" value={formik.values.width} onChange={formik.handleChange} />
+            <Input
+              type="number"
+              name="width"
+              value={formik.values.width}
+              onChange={formik.handleChange}
+              fontSize={"sm"}
+            />
             <FormErrorMessage>{formik.errors.width}</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={formik.errors.height && formik.touched.height}>
             <FormLabel>Height (In Cm)</FormLabel>
-            <Input type="number" name="height" value={formik.values.height} onChange={formik.handleChange} />
+            <Input
+              type="number"
+              name="height"
+              value={formik.values.height}
+              onChange={formik.handleChange}
+              fontSize={"sm"}
+            />
             <FormErrorMessage>{formik.errors.height}</FormErrorMessage>
           </FormControl>
         </div>
         <FormControl mt={4} isInvalid={formik.errors.weight && formik.touched.weight}>
           <FormLabel>Net Weight (In Gm)</FormLabel>
-          <Input type="number" name="weight" value={formik.values.weight} onChange={formik.handleChange} />
+          <Input
+            type="number"
+            name="weight"
+            value={formik.values.weight}
+            onChange={formik.handleChange}
+            fontSize={"sm"}
+          />
           <FormErrorMessage>{formik.errors.weight}</FormErrorMessage>
         </FormControl>
       </Components.Default.SettingsPairContainer>
