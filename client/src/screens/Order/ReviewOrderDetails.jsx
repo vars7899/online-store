@@ -15,7 +15,7 @@ export const ReviewOrderDetails = () => {
   const { newOrderDetails } = useSelector((state) => state.order);
 
   useEffect(() => {
-    if (publicKey && newOrderDetails) {
+    if (publicKey && newOrderDetails.isFilled && newOrderDetails.orderItems) {
       dispatch(
         paymentThunkActions.createNewPaymentIntent({
           orderItems: newOrderDetails.orderItems,

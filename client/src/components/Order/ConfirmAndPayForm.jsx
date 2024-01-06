@@ -35,33 +35,29 @@ export const ConfirmAndPayForm = () => {
   const billingAddress = shippingAddressList.find((address) => address._id === newOrderDetails.billingAddressId);
 
   // useEffect(() => {
-  //   dispatch(orderThunkActions.generateOrderCharges());
-  // }, []);
-
-  useEffect(() => {
-    if (!stripe || !clientSecret) {
-      return;
-    }
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent.status) {
-        case "succeeded":
-          setMessage("Payment succeeded!");
-          dispatch(storeThunkActions.clearUserCart());
-          dispatch(resetNewOrderDetails());
-          navigate("/order/order-confirmation");
-          break;
-        case "processing":
-          setMessage("Your payment is processing.");
-          break;
-        case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
-          break;
-        default:
-          setMessage("Something went wrong.");
-          break;
-      }
-    });
-  }, [stripe]);
+  //   if (!stripe || !clientSecret) {
+  //     return;
+  //   }
+  //   stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+  //     switch (paymentIntent.status) {
+  //       case "succeeded":
+  //         setMessage("Payment succeeded!");
+  //         dispatch(storeThunkActions.clearUserCart());
+  //         dispatch(resetNewOrderDetails());
+  //         navigate("/order/order-confirmation");
+  //         break;
+  //       case "processing":
+  //         setMessage("Your payment is processing.");
+  //         break;
+  //       case "requires_payment_method":
+  //         setMessage("Your payment was not successful, please try again.");
+  //         break;
+  //       default:
+  //         setMessage("Something went wrong.");
+  //         break;
+  //     }
+  //   });
+  // }, [stripe]);
 
   useEffect(() => {
     if (isError) {
@@ -106,7 +102,7 @@ export const ConfirmAndPayForm = () => {
           }
         }
       }
-      // >> Navigate to order confirmed as stripe do not reach thi point its only for other payment method
+      // >> Navigate to order confirmed as stripe do not reach this point its only for other payment method
       dispatch(storeThunkActions.clearUserCart());
       dispatch(resetNewOrderDetails());
       navigate("/order/order-confirmation/" + selectedOrder._id, { replace: true });
