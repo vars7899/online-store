@@ -8,4 +8,5 @@ router.route("/publicKey").get(payment.sendStripePublicKeyToClient);
 router.route("/create-payment-intent").post(handleAuth, payment.generateStripeIntent);
 router.route("/create-wallet-payment-intent").post(handleAuth, payment.generateStripeIntentForWallet);
 router.route("/stripe/webhook").post(payment.stripePaymentWebhook);
+
 module.exports = router;

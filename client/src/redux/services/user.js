@@ -42,3 +42,7 @@ export const updateCartItemQty = async ({ cartItemId, changeValue }) => {
   const { data } = await axios.patch(API + "/cart/update-cart/" + cartItemId, { changeValue });
   return data;
 };
+export const getUserDetails = async () => {
+  const { data } = await axios.get(API);
+  return data;
+};

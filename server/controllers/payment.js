@@ -2,7 +2,9 @@ const createHttpError = require("http-errors");
 const { getChargesForOrder } = require("../functions");
 const Order = require("../models/order");
 const { Transaction, User } = require("../models");
+const { default: mongoose } = require("mongoose");
 const stripe = require("stripe")(process.env.STRIPE_TEST_SECRET_KEY);
+const ULID = require("ulid");
 
 const sendStripePublicKeyToClient = async (req, res, next) => {
   try {
@@ -66,7 +68,6 @@ const stripePaymentWebhook = async (req, res, next) => {
     switch (event.type) {
       case "charge.succeeded":
         const pay = event.data.object;
-        console.log(1);
         if (event.data.object.metadata.paymentType === "walletPayment") {
           // Update transaction state to debited
           const trans = await Transaction.findOneAndUpdate(
@@ -93,7 +94,6 @@ const stripePaymentWebhook = async (req, res, next) => {
             }
           );
         } else {
-          console.log(2);
           await Order.findOneAndUpdate(
             { paymentIntent: pay.payment_intent },
             {
@@ -144,9 +144,58 @@ const generateStripeIntentForWallet = async (req, res, next) => {
   }
 };
 
+const payOrderWithWallet = async (req, res, next) => {
+  try {
+    const { orderId } = req.body;
+
+    if (!orderId || mongoose.isValidObjectId(orderId)) {
+      throw createHttpError(404, "Invalid order, No order exist");
+    }
+
+    const existingOrder = await Order.findById(orderId);
+
+    if (existingOrder.bill.total < 0) {
+      throw createHttpError(400, "Invalid order total");
+    }
+
+    if (existingOrder.bill.total > req.user.wallet.balance) {
+      throw createHttpError(400, "Insufficient balance, Please try other payment method.");
+    }
+
+    await User.findByIdAndUpdate(req.user._id, {
+      $inc: { "wallet.balance": -1 * existingOrder.bill.total },
+    });
+
+    await Order.findOneAndUpdate(
+      { _id: orderId },
+      {
+        $set: {
+          orderState: "Paid",
+        },
+      },
+      { new: true }
+    );
+    // Update transaction state to debited
+    await Transaction.create({
+      user: req.user._id,
+      paymentId: ULID.ulid().toString(),
+      amount: existingOrder.bill.total,
+      transactionState: "credit",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   sendStripePublicKeyToClient,
   generateStripeIntent,
   stripePaymentWebhook,
   generateStripeIntentForWallet,
+  payOrderWithWallet,
 };

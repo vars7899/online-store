@@ -7,9 +7,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
 import toast from "react-hot-toast";
-import { orderThunkActions, storeThunkActions } from "../../redux/thunkActions";
+import { orderThunkActions, paymentThunkActions, storeThunkActions } from "../../redux/thunkActions";
 import { resetNewOrderDetails, resetOrder } from "../../redux/features/orderSlice";
-import { updateOrderPayment } from "../../redux/services/order";
 
 export const ConfirmAndPayForm = () => {
   // >> Router
@@ -27,6 +26,7 @@ export const ConfirmAndPayForm = () => {
     selectedOrder,
     isError,
     message: orderMessage,
+    isSuccess,
   } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.auth);
   const { cart, shippingAddressList } = useSelector((state) => state.store); // >> update this to order items
@@ -34,35 +34,15 @@ export const ConfirmAndPayForm = () => {
   const shippingAddress = shippingAddressList.find((address) => address._id === newOrderDetails.shippingAddressId);
   const billingAddress = shippingAddressList.find((address) => address._id === newOrderDetails.billingAddressId);
 
-  // useEffect(() => {
-  //   if (!stripe || !clientSecret) {
-  //     return;
-  //   }
-  //   stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-  //     switch (paymentIntent.status) {
-  //       case "succeeded":
-  //         setMessage("Payment succeeded!");
-  //         dispatch(storeThunkActions.clearUserCart());
-  //         dispatch(resetNewOrderDetails());
-  //         navigate("/order/order-confirmation");
-  //         break;
-  //       case "processing":
-  //         setMessage("Your payment is processing.");
-  //         break;
-  //       case "requires_payment_method":
-  //         setMessage("Your payment was not successful, please try again.");
-  //         break;
-  //       default:
-  //         setMessage("Something went wrong.");
-  //         break;
-  //     }
-  //   });
-  // }, [stripe]);
-
   useEffect(() => {
     if (isError) {
       toast.error(orderMessage);
       navigate("/user/cart", { replace: true });
+    }
+    if (isSuccess) {
+      dispatch(storeThunkActions.clearUserCart());
+      dispatch(resetNewOrderDetails());
+      navigate("/order/order-confirmation/" + selectedOrder._id, { replace: true });
     }
     dispatch(resetOrder());
   }, [isError, orderMessage, dispatch]);
@@ -102,15 +82,10 @@ export const ConfirmAndPayForm = () => {
           }
         }
       }
-      // >> Navigate to order confirmed as stripe do not reach this point its only for other payment method
-      dispatch(storeThunkActions.clearUserCart());
-      dispatch(resetNewOrderDetails());
-      navigate("/order/order-confirmation/" + selectedOrder._id, { replace: true });
     } catch (error) {
       // Handle unexpected errors
-      console.log(error);
       setMessage(error.message);
-      toast.error("An unexpected error occurred.");
+      toast.error(error);
     } finally {
       setStripeIsLoading(false);
     }
@@ -180,7 +155,12 @@ export const ConfirmAndPayForm = () => {
               </Components.Default.SelectionBox>
             </div>
           ) : (
-            <div>Wallet Details</div>
+            <Components.Default.SelectionBox selected={true}>
+              <div className="flex items-center justify-between">
+                <p className="capitalize">{newOrderDetails.paymentMethod}</p>
+                <p className="capitalize">{Number(user.wallet.balance).toFixed(2)}</p>
+              </div>
+            </Components.Default.SelectionBox>
           )}
         </div>
       </div>

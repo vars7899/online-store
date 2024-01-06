@@ -3,7 +3,7 @@ const checkForValidObjectId = require("../functions/checkForValidObjectId");
 const functions = require("../functions");
 const ULID = require("ulid");
 const Order = require("../models/order");
-const { Address, Product } = require("../models");
+const { Address, Product, Transaction, User } = require("../models");
 const { isValidObjectId, default: mongoose } = require("mongoose");
 
 const getOrderCharges = async (req, res, next) => {
@@ -76,7 +76,7 @@ const createNewOrder = async (req, res, next) => {
       await productExist.save();
     }
 
-    const newOrder = await Order.create({
+    let newOrder = await Order.create({
       user: req.user._id,
       orderItems,
       shippingAddress,
@@ -97,6 +97,34 @@ const createNewOrder = async (req, res, next) => {
       paymentMethod,
       paymentIntent,
     });
+
+    if (paymentMethod === "wallet") {
+      if (bill.total > req.user.wallet.balance) {
+        throw createHttpError(400, "Insufficient balance, Please try other payment method.");
+      }
+
+      await User.findByIdAndUpdate(req.user._id, {
+        $inc: { "wallet.balance": -1 * bill.total },
+      });
+
+      newOrder = await Order.findOneAndUpdate(
+        { _id: newOrder._id },
+        {
+          $set: {
+            orderState: "Paid",
+          },
+        },
+        { new: true }
+      );
+      // Update transaction state to debited
+      await Transaction.create({
+        user: req.user._id,
+        paymentId: ULID.ulid().toString(),
+        amount: bill.total,
+        transactionState: "credit",
+        createdAt: Date.now(),
+      });
+    }
 
     res.status(200).json({
       success: true,

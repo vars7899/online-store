@@ -59,3 +59,13 @@ export const getAllUserTransactions = createAsyncThunk("payment/getAllUserTransa
     return thunkAPI.rejectWithValue(message);
   }
 });
+
+export const payOrderWithWallet = createAsyncThunk("payment/payOrderWithWallet", async (data, thunkAPI) => {
+  try {
+    return await paymentServices.payOrderWithWallet(data);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});

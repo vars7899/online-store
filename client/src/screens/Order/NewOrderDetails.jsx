@@ -6,6 +6,7 @@ import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as orderActions from "../../redux/features/orderSlice";
+import { getUserDetails } from "../../redux/features/authSlice";
 
 const defaultOrderDetails = {
   shippingAddressId: "",
@@ -91,6 +92,7 @@ export const NewOrderDetails = () => {
   // >> Initiate Page data
   useEffect(() => {
     dispatch(storeThunkActions.GET_ALL_SHIPPING_ADDRESS());
+    dispatch(getUserDetails());
   }, []);
 
   useEffect(() => {

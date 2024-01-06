@@ -88,6 +88,16 @@ const paymentSlice = createSlice({
       $fulfilledHandler(state, action);
       state.transactionHistoryList = action.payload.transactionHistoryList;
     });
+    // ! getAllUserTransactions
+    builder.addCase(paymentThunkActions.payOrderWithWallet.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(paymentThunkActions.payOrderWithWallet.rejected, (state, action) => {
+      $rejectionHandler(state, action);
+    });
+    builder.addCase(paymentThunkActions.payOrderWithWallet.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
+    });
   },
 });
 

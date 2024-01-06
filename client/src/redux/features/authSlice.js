@@ -76,6 +76,16 @@ export const logoutUser = createAsyncThunk("auth/logoutUser", async (data, thunk
   }
 });
 
+export const getUserDetails = createAsyncThunk("auth/getUserDetails", async (thunkAPI) => {
+  try {
+    return await userServices.getUserDetails();
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 const $rejectionHandler = (state, action) => {
   state.isLoading = false;
   state.isError = true;
@@ -189,13 +199,25 @@ const authSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(logoutUser.rejected, (state, action) => {
-      $rejectionHandler();
+      $rejectionHandler(state, action);
     });
     builder.addCase(logoutUser.fulfilled, (state, action) => {
-      $fulfilledHandler();
+      $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = action.payload.success;
       toast.success("User logged out");
+    });
+    // !! getUserDetails
+    builder.addCase(getUserDetails.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getUserDetails.rejected, (state, action) => {
+      $rejectionHandler(state, action);
+    });
+    builder.addCase(getUserDetails.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
+      state.user = action.payload.user;
+      state.isLoggedIn = action.payload.success;
     });
   },
 });

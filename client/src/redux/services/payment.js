@@ -16,3 +16,8 @@ export const createNewPaymentIntentForWallet = async (formData) => {
   const { data } = await axios.post(API + "/create-wallet-payment-intent", formData);
   return data;
 };
+
+export const payOrderWithWallet = async (formData) => {
+  const { data } = await axios.post(API + "/pay-with-wallet", formData);
+  return data;
+};
