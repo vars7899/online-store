@@ -4,14 +4,17 @@ import { orderThunkActions, storeThunkActions } from "../../redux/thunkActions";
 import toast from "react-hot-toast";
 import { resetOrder } from "../../redux/features/orderSlice";
 import { DateTime } from "luxon";
-import { Button, Divider, Image, Tag, Select } from "@chakra-ui/react";
+import { Button, Divider, Image, Tag, Select, Center } from "@chakra-ui/react";
 import { IconFilter } from "@tabler/icons-react";
 import { OrderFilterSideBar } from "./OrderFilterSideBar";
 import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 // << Lazy
 const ReviewModal = lazy(() => import("../User/ReviewModal"));
 
 export const UserOrderList = () => {
+  const ITEMS_PER_PAGE = 4;
+  const [itemOffset, setItemOffset] = useState(0); // pagination offset
   const durationOptions = [
     { title: "All Orders", value: "all" },
     { title: "Last 24 Hours", value: DateTime.now().minus({ hours: 24 }).toISO() },
@@ -43,6 +46,18 @@ export const UserOrderList = () => {
   useEffect(() => {
     dispatch(orderThunkActions.getAllUserOrders(orderFilter));
   }, [orderFilter.orderDuration]);
+
+  // >> React Pagination
+  const endOffset = itemOffset + ITEMS_PER_PAGE;
+  const currentOrders = orderList.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(orderList.length / ITEMS_PER_PAGE);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * ITEMS_PER_PAGE) % orderList.length;
+    setItemOffset(newOffset);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div>
@@ -76,10 +91,29 @@ export const UserOrderList = () => {
         </div>
       </div>
       <div className="grid gap-4">
-        {orderList.map((order) => (
+        {currentOrders.map((order) => (
           <OrderDetailCard key={order?._id} order={order} />
         ))}
       </div>
+      <Center>
+        {orderList.length > ITEMS_PER_PAGE && (
+          <ReactPaginate
+            className="paginate"
+            activeClassName="paginate-item active-paginate-item"
+            breakClassName="paginate-item"
+            pageClassName="paginate-item"
+            nextClassName="paginate-move-item"
+            previousClassName="paginate-move-item"
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
+        )}
+      </Center>
     </div>
   );
 };
