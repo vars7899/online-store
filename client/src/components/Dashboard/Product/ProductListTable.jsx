@@ -53,12 +53,17 @@ export const ProductListTable = ({ productList }) => {
     },
     {
       header: "Product ID",
-      accessorKey: "_id",
+      accessorFn: (row) => ({
+        _id: row._id,
+      }),
       cell: (val) => (
-        <div className="flex items-center justify-between">
-          <p className="uppercase underline text-sm">{val.getValue()}</p>
+        <div
+          className="flex items-center justify-between"
+          onClick={() => navigate(`/dashboard/products/${val.getValue()._id}`)}
+        >
+          <p className="uppercase underline text-sm">{val.getValue()._id}</p>
           <IconButton size={"sm"} variant={"ghost"} colorScheme="blue">
-            <IconCopy onClick={() => copy(val.getValue())} strokeWidth={1} />
+            <IconCopy onClick={() => copy(val.getValue()._id)} strokeWidth={1} />
           </IconButton>
         </div>
       ),
