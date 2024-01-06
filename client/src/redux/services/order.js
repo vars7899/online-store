@@ -28,13 +28,14 @@ export const getAllUserOrders = async (formData) => {
   let url_string = API + "?";
 
   if (formData) {
-    const { orderState, paymentMethod, shippingMethod, shippingServiceType } = formData;
+    const { orderState, paymentMethod, shippingMethod, shippingServiceType, orderDuration } = formData;
 
     // >> Add query parameters
     if (orderState !== "all") url_string += `withOrderState=${orderState}&`;
     if (paymentMethod !== "all") url_string += `withPaymentMethod=${paymentMethod}&`;
     if (shippingMethod !== "all") url_string += `withShippingMethod=${shippingMethod}&`;
     if (shippingServiceType !== "all") url_string += `withShippingServiceType=${shippingServiceType}&`;
+    if (orderDuration !== "all") url_string += `withOrderDuration=${orderDuration}&`;
   }
 
   const { data } = await axios.get(url_string);

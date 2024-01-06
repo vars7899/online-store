@@ -4,31 +4,19 @@ import { orderThunkActions, storeThunkActions } from "../../redux/thunkActions";
 import toast from "react-hot-toast";
 import { resetOrder } from "../../redux/features/orderSlice";
 import { DateTime } from "luxon";
-import {
-  Button,
-  Divider,
-  IconButton,
-  Image,
-  Tag,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Select,
-} from "@chakra-ui/react";
-import { IconChevronDown, IconChevronUp, IconDotsVertical, IconFilter } from "@tabler/icons-react";
+import { Button, Divider, Image, Tag, Select } from "@chakra-ui/react";
+import { IconFilter } from "@tabler/icons-react";
 import { OrderFilterSideBar } from "./OrderFilterSideBar";
-import { OrderStateTag } from "./OrderStateTag";
 import { useNavigate } from "react-router-dom";
 // << Lazy
 const ReviewModal = lazy(() => import("../User/ReviewModal"));
 
 export const UserOrderList = () => {
   const durationOptions = [
-    { title: "Today", value: 1 },
-    { title: "This Month", value: 30 },
-    { title: "This Year", value: 365 },
-    { title: "All Orders", value: 0 },
+    { title: "All Orders", value: "all" },
+    { title: "Last 24 Hours", value: DateTime.now().minus({ hours: 24 }).toISO() },
+    { title: "This Month", value: DateTime.now().minus({ week: 1 }).toISO() },
+    { title: "This Year", value: DateTime.now().minus({ year: 1 }).toISO() },
   ];
   const dispatch = useDispatch();
   const { orderList, isError, message, isLoading } = useSelector((state) => state.order);
@@ -37,6 +25,7 @@ export const UserOrderList = () => {
     paymentMethod: "all",
     shippingMethod: "all",
     shippingServiceType: "all",
+    orderDuration: "all",
   });
 
   const $initPageData = () => dispatch(orderThunkActions.getAllUserOrders());
@@ -47,25 +36,44 @@ export const UserOrderList = () => {
   }, []);
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
+    if (isError) toast.error(message);
     dispatch(resetOrder());
   }, [isError, message, dispatch]);
 
+  useEffect(() => {
+    dispatch(orderThunkActions.getAllUserOrders(orderFilter));
+  }, [orderFilter.orderDuration]);
+
   return (
     <div>
-      <div className="mb-4 flex items-center justify-end">
-        <Select></Select>
-        <OrderFilterSideBar
-          orderFilter={orderFilter}
-          setOrderFilter={setOrderFilter}
-          $updateAction={$loadOrderListWithFilter}
-        >
-          <Button leftIcon={<IconFilter />} variant={"outline"}>
-            Filter
-          </Button>
-        </OrderFilterSideBar>
+      <div className="mb-4 flex items-center justify-between">
+        <Tag size={"lg"} variant={"outline"} colorScheme="blue">
+          Orders : {orderList ? orderList.length : 0}
+        </Tag>
+        <div className="flex">
+          <Select
+            size={"sm"}
+            maxW={"xs"}
+            mr={3}
+            // value={orderFilter.orderDuration}
+            onChange={(e) => setOrderFilter((prev) => ({ ...prev, orderDuration: e.target.value }))}
+          >
+            {durationOptions.map((dur) => (
+              <option key={dur.title} value={dur.value}>
+                {dur.title}
+              </option>
+            ))}
+          </Select>
+          <OrderFilterSideBar
+            orderFilter={orderFilter}
+            setOrderFilter={setOrderFilter}
+            $updateAction={$loadOrderListWithFilter}
+          >
+            <Button size={"sm"} leftIcon={<IconFilter size={18} />} variant={"outline"}>
+              Filter
+            </Button>
+          </OrderFilterSideBar>
+        </div>
       </div>
       <div className="grid gap-4">
         {orderList.map((order) => (

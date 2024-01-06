@@ -110,7 +110,9 @@ const createNewOrder = async (req, res, next) => {
 
 const getAllUserOrders = async (req, res, next) => {
   try {
-    const { withOrderState, withShippingMethod, withShippingServiceType, withPaymentMethod } = req.query;
+    console.log(req.query);
+    const { withOrderState, withShippingMethod, withShippingServiceType, withPaymentMethod, withOrderDuration } =
+      req.query;
     // << Base condition to get user orders
     const queryConditions = { user: req.user._id };
     // << Other conditions if provided
@@ -118,6 +120,7 @@ const getAllUserOrders = async (req, res, next) => {
     if (withShippingMethod) queryConditions.shippingMethod = withShippingMethod;
     if (withShippingServiceType) queryConditions.shippingServiceType = withShippingServiceType;
     if (withPaymentMethod) queryConditions.paymentMethod = withPaymentMethod;
+    if (withOrderDuration) queryConditions.createdAt = { $gt: withOrderDuration };
 
     let userOrderList = await Order.find(queryConditions).populate("orderItems.product");
 
