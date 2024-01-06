@@ -34,6 +34,10 @@ export const ConfirmAndPayForm = () => {
   const shippingAddress = shippingAddressList.find((address) => address._id === newOrderDetails.shippingAddressId);
   const billingAddress = shippingAddressList.find((address) => address._id === newOrderDetails.billingAddressId);
 
+  // useEffect(() => {
+  //   dispatch(orderThunkActions.generateOrderCharges());
+  // }, []);
+
   useEffect(() => {
     if (!stripe || !clientSecret) {
       return;

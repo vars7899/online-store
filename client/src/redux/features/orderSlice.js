@@ -60,6 +60,7 @@ const orderSlice = createSlice({
     updateNewOrderTotal(state, action) {
       state.newOrderDetails.total = action.payload;
     },
+
     updateNewOrderDetails(state, action) {
       state.newOrderDetails.isFilled = true;
       // >> Shipping details

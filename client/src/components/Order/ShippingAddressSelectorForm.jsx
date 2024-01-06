@@ -1,4 +1,4 @@
-import { Button, Divider, IconButton, Tag } from "@chakra-ui/react";
+import { Button, Divider, IconButton } from "@chakra-ui/react";
 import * as Components from "..";
 import { IconGridDots, IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";

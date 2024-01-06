@@ -7,6 +7,7 @@ import { storeThunkActions } from "../../redux/thunkActions";
 import * as storeActions from "../../redux/features/storeSlice";
 import { ComponentLoadingBlock } from "../Loader";
 import { DateTime } from "luxon";
+import { Hooks } from "../../global";
 
 export const CartSummary = ({
   title,
@@ -18,17 +19,8 @@ export const CartSummary = ({
   const dt = DateTime.now();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { chargesPercentage, cartSubtotal, cart, isLoading, cartCount } = useSelector((state) => state.store);
-
-  // >> cart charges
-  const convenienceFee = cartSubtotal * chargesPercentage.convenienceFeesPercentage;
-  const gstFee = cartSubtotal * chargesPercentage.gstPercentage;
-  const pstFee = cartSubtotal * chargesPercentage.pstPercentage;
-  const total = cartSubtotal + convenienceFee + gstFee + pstFee + shippingCharges;
-
-  useEffect(() => {
-    dispatch(storeThunkActions.getStoreChargesPercentage());
-  }, []);
+  const { convenienceFee, gstFee, pstFee, total } = Hooks.useOrderCharges({ shippingCharges });
+  const { cartSubtotal, cart, isLoading, cartCount } = useSelector((state) => state.store);
 
   useEffect(() => {
     dispatch(storeActions.getCartSubtotal());
