@@ -7,5 +7,4 @@ export * as Dashboard from "./Dashboard";
 export * as Order from "./Order";
 export * as Address from "./Address";
 export * as Cart from "./Cart";
-export * as Stripe from "./Stripe";
 export * as Loader from "./Loader";

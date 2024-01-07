@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   FormControl,
+  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input,
@@ -16,55 +17,49 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import * as storeActions from "../../redux/thunkActions/storeActions";
+import { useDispatch } from "react-redux";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { storeThunkActions as STA } from "../../redux/thunkActions";
 
-const defaultShippingAddressFormData = {
-  name: "",
-  contactInformation: "",
-  street: "",
-  addressLine: "",
-  city: "",
-  state: "",
-  country: "",
-  postalCode: "",
-  deliveryInstruction: "",
-};
 export const AddNewShippingAddressModal = ({ children }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  // redux
   const dispatch = useDispatch();
-  const { isError, isLoading, isSuccess, message } = useSelector((state) => state.store);
-  // form data
-  const [shippingAddressDetails, setShippingAddressDetails] = useState(defaultShippingAddressFormData);
-
-  const $updateShippingAddressDetails = (e) => {
-    const { name, value } = e.target;
-    setShippingAddressDetails((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const $clearAndCloseForm = () => {
-    setShippingAddressDetails(defaultShippingAddressFormData);
+    formik.resetForm();
     onClose();
   };
 
-  const createNewShippingAddressHandler = (e) => {
-    e.preventDefault();
-    const { name, contactInformation, street, city, state, country, postalCode } = shippingAddressDetails;
-
-    if (!name || !contactInformation || !street || !city || !state || !country || !postalCode) {
-      return toast.error(
-        "It appears that one or more required fields are missing from the address form. Please try again"
-      );
-    }
-    dispatch(storeActions.CREATE_NEW_SHIPPING_ADDRESS(shippingAddressDetails));
-    $clearAndCloseForm();
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      contactInformation: "",
+      street: "",
+      addressLine: "",
+      city: "",
+      state: "",
+      country: "",
+      postalCode: "",
+      deliveryInstruction: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Name is required"),
+      contactInformation: Yup.number().required("Contact Details is required"),
+      street: Yup.string().required("Street Address is required"),
+      addressLine: Yup.string(),
+      city: Yup.string().required("City is required"),
+      state: Yup.string().required("State is required"),
+      country: Yup.string().required("Country is required"),
+      postalCode: Yup.string().required("Postal Address is required"),
+      deliveryInstruction: Yup.string(),
+    }),
+    onSubmit: (values) => {
+      dispatch(STA.CREATE_NEW_SHIPPING_ADDRESS(values));
+      formik.resetForm();
+      onClose();
+    },
+  });
 
   return (
     <>
@@ -87,95 +82,104 @@ export const AddNewShippingAddressModal = ({ children }) => {
           <Divider />
           <ModalBody>
             <div className="mb-12">
-              <FormControl isRequired mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.name && formik.touched.name}>
                 <FormLabel>Name</FormLabel>
                 <Input
                   type="text"
                   name="name"
-                  value={shippingAddressDetails.name}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
                   placeholder="Jonathan Dawson"
                 />
+                <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.contactInformation && formik.touched.contactInformation}>
                 <FormLabel>Contact Information</FormLabel>
                 <Input
-                  type="tel"
+                  type="number"
                   name="contactInformation"
-                  value={shippingAddressDetails.contactInformation}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.contactInformation}
+                  onChange={formik.handleChange}
                   placeholder="+16047781923"
                 />
                 <FormHelperText>We may need to contact you</FormHelperText>
+                <FormErrorMessage>{formik.errors.contactInformation}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.street && formik.touched.street}>
                 <FormLabel>Street</FormLabel>
                 <Input
                   type="text"
                   name="street"
-                  value={shippingAddressDetails.street}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.street}
+                  onChange={formik.handleChange}
                   placeholder="4280 Pearl Street"
                 />
+                <FormErrorMessage>{formik.errors.street}</FormErrorMessage>
               </FormControl>
-              <FormControl mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.addressLine && formik.touched.addressLine}>
                 <FormLabel>Address Line</FormLabel>
                 <Textarea
                   name="addressLine"
-                  value={shippingAddressDetails.addressLine}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.addressLine}
+                  onChange={formik.handleChange}
                   placeholder="Unit number 345"
                 />
+                <FormErrorMessage>{formik.errors.addressLine}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.city && formik.touched.city}>
                 <FormLabel>City</FormLabel>
                 <Input
                   type="text"
                   name="city"
-                  value={shippingAddressDetails.city}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.city}
+                  onChange={formik.handleChange}
                   placeholder="Streetsville"
                 />
+                <FormErrorMessage>{formik.errors.city}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.state && formik.touched.state}>
                 <FormLabel>State / Province</FormLabel>
                 <Input
                   type="text"
                   name="state"
-                  value={shippingAddressDetails.state}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.state}
+                  onChange={formik.handleChange}
                   placeholder="Ontario"
                 />
+                <FormErrorMessage>{formik.errors.state}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.country && formik.touched.country}>
                 <FormLabel>Country</FormLabel>
                 <Input
                   type="text"
                   name="country"
-                  value={shippingAddressDetails.country}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.country}
+                  onChange={formik.handleChange}
                   placeholder="Canada"
                 />
+                <FormErrorMessage>{formik.errors.country}</FormErrorMessage>
               </FormControl>
-              <FormControl isRequired mt={2}>
+              <FormControl mt={2} isInvalid={formik.errors.postalCode && formik.touched.postalCode}>
                 <FormLabel>Postal Code</FormLabel>
                 <Input
                   type="text"
                   name="postalCode"
-                  value={shippingAddressDetails.postalCode}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.postalCode}
+                  onChange={formik.handleChange}
                   placeholder="L5M 1X2"
                 />
+                <FormErrorMessage>{formik.errors.postalCode}</FormErrorMessage>
               </FormControl>
               <FormControl mt={2}>
                 <FormLabel>Delivery Instruction</FormLabel>
                 <Textarea
                   name="deliveryInstruction"
-                  value={shippingAddressDetails.deliveryInstruction}
-                  onChange={$updateShippingAddressDetails}
+                  value={formik.values.deliveryInstruction}
+                  onChange={formik.handleChange}
                   placeholder="L5M 1X2"
                 />
                 <FormHelperText>Let us know your instructions clearly</FormHelperText>
+                <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
               </FormControl>
             </div>
           </ModalBody>
@@ -185,7 +189,7 @@ export const AddNewShippingAddressModal = ({ children }) => {
               <Button colorScheme="gray" variant={"outline"} mr={3} onClick={$clearAndCloseForm}>
                 Cancel
               </Button>
-              <Button variant="outline" colorScheme="blue" onClick={createNewShippingAddressHandler}>
+              <Button variant="outline" colorScheme="blue" onClick={formik.handleSubmit}>
                 Add New Address
               </Button>
             </div>
