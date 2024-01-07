@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+
+:root {
+  --black: hsl(0,0%,9%);
+  --purple: hsl(259,40%,67%);
+  --sand: hsl(26,37%,59%);
+  --silver: hsl(94, 17%, 92%);
+}
+
+
 .disable-scrollbars::-webkit-scrollbar {
   background: transparent; /* Chrome/Safari/Webkit */
   width: 0px;

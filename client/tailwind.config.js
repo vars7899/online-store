@@ -18,8 +18,11 @@ export default {
         },
         offWhite: "#f1f1f1",
         platinum: "#E0E0E0",
-        black: "#232323",
+        black: "var(--black)",
         gold: "#e3b130",
+        purple: "var(--purple)",
+        sand: "var(--sand)",
+        silver: "var(--silver)",
       },
       fontFamily: {
         bowlby: "Konkhmer Sleokchher, cursive",

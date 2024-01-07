@@ -26,17 +26,15 @@ const App = () => {
     dispatch(PTA.GET_STRIPE_PUBLIC_KEY());
   }, [dispatch]);
 
-  // TODO --> giving double toast after adding these effect
   useEffect(() => {
-    if (authState.isError) {
-      toast.error(authState.message);
-      dispatch(authAction.RESET_AUTH());
-    }
-    if (storeState.isError) {
-      toast.error(storeState.message);
-      dispatch(storeAction.RESET_STORE());
-    }
-  }, [dispatch, authState.isError, authState.message, storeState.isError, storeState.message]);
+    if (storeState.isError) toast.error(storeState.message);
+    dispatch(storeAction.RESET_STORE());
+  }, [dispatch, storeState.isError, storeState.message]);
+
+  useEffect(() => {
+    if (authState.isError) toast.error(authState.message);
+    dispatch(authAction.RESET_AUTH());
+  }, [dispatch, authState.isError, authState.message]);
 
   return (
     <div className="font-poppins">
