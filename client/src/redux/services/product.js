@@ -7,26 +7,26 @@ export const createNewProductCategory = async (formData) => {
   return data;
 };
 
-export const updateProductDetails = async ({ productId, formData }) => {
+export const UPDATE_PRODUCT_DETAILS = async ({ productId, formData }) => {
   const { data } = await axios.patch(API + "/" + productId, formData);
   return data;
 };
 
-export const getAllProducts = async () => {
+export const GET_ALL_PRODUCTS = async () => {
   const { data } = await axios.get(API);
   return data;
 };
-export const updateProductFeatureVisibility = async (formData) => {
+export const UPDATE_PRODUCT_FEATURE_VISIBILITY = async (formData) => {
   const { data } = await axios.patch(API + "/feature/" + formData);
   return data;
 };
 
-export const getProductDetails = async (formData) => {
+export const GET_PRODUCT_DETAILS = async (formData) => {
   const { data } = await axios.get(API + `/${formData}`);
   return data;
 };
 
-export const createNewProduct = async (formData) => {
+export const CREATE_NEW_PRODUCT = async (formData) => {
   const { data } = await axios.post(API + "/add-new", formData);
   return data;
 };

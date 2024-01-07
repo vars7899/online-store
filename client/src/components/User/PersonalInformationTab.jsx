@@ -3,8 +3,8 @@ import * as Components from "../";
 import { FormControl, FormLabel, Input, FormHelperText, Divider, Button, Tag } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import * as authActions from "../../redux/features/authSlice";
 import { IconAlertCircle, IconCircleCheck } from "@tabler/icons-react";
+import { authThunkActions as ATA } from "../../redux/thunkActions";
 
 export const PersonalInformationTab = ({ user }) => {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ export const PersonalInformationTab = ({ user }) => {
       return toast.error("It appears that provide phone number is either missing or invalid. Please try again");
     }
 
-    dispatch(authActions.UPDATE_USER_DETAILS(userDetails));
+    dispatch(ATA.UPDATE_USER_DETAILS(userDetails));
   };
 
   return (

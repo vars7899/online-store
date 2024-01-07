@@ -1,11 +1,12 @@
-import { IconFileDownload, IconHelpCircle, IconRefresh } from "@tabler/icons-react";
-import React, { useEffect, useState } from "react";
+import { IconRefresh } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import * as Layout from "../../layouts";
 import { Button, Tabs, TabList, Tab, TabPanels, TabPanel, Input, Badge } from "@chakra-ui/react";
 import * as Component from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { GET_ALL_PRODUCTS, RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
+import { RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
+import { dashboardThunkActions as DTA } from "../../redux/thunkActions";
 
 export const ProductList = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export const ProductList = () => {
   const [outOfStock, setOutOfStock] = useState([]);
 
   const $initPage = () => {
-    dispatch(GET_ALL_PRODUCTS());
+    dispatch(DTA.GET_ALL_PRODUCTS());
   };
   useEffect(() => {
     $initPage();

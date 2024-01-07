@@ -8,6 +8,7 @@ import * as storeThunkAction from "./redux/thunkActions/storeActions";
 import * as storeAction from "./redux/features/storeSlice";
 import { paymentThunkActions } from "./redux/thunkActions";
 import { RenderRoutes } from "./RenderRoutes";
+import { authThunkActions as ATA } from "./redux/thunkActions";
 
 const App = () => {
   // For token
@@ -18,7 +19,7 @@ const App = () => {
   const storeState = useSelector((state) => state.store);
 
   useEffect(() => {
-    dispatch(authAction.CHECK_LOGIN_STATUS());
+    dispatch(ATA.CHECK_LOGIN_STATUS());
     // Remove these two from here
     dispatch(storeThunkAction.GET_USER_CART_DETAILS());
     dispatch(storeThunkAction.GET_USER_WISHLIST_DETAILS());

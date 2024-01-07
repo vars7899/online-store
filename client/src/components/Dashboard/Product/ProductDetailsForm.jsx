@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { IconFileUpload, IconPhotoUp, IconRestore } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { dashboardThunkActions } from "../../../redux/thunkActions";
+import { dashboardThunkActions as DTA } from "../../../redux/thunkActions";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -68,7 +68,7 @@ const ProductDetailsSection = ({ product, categoryList }) => {
       productFormData.append("featured", values.featured);
       productFormData.append("file", newProductImage);
 
-      dispatch(dashboardThunkActions.updateProductDetails({ productId: product._id, formData: productFormData }));
+      dispatch(DTA.UPDATE_PRODUCT_DETAILS({ productId: product._id, formData: productFormData }));
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),

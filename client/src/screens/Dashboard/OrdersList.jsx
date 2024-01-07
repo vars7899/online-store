@@ -3,7 +3,7 @@ import { Components, Layouts } from "../../global";
 import { IconRefresh } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { dashboardThunkActions as DBT } from "../../redux/thunkActions";
+import { dashboardThunkActions as DTA } from "../../redux/thunkActions";
 import toast from "react-hot-toast";
 import { RESET_DASHBOARD, segregateOrderType } from "../../redux/features/dashboardSlice";
 
@@ -12,7 +12,7 @@ export const OrdersList = () => {
   const { orderList, isError, message, segregatedOrderList, isLoading } = useSelector((state) => state.dashboard);
 
   const $initPageData = () => {
-    dispatch(DBT.getAllStoreOrders());
+    dispatch(DTA.GET_ALL_STORE_ORDERS());
   };
 
   useEffect(() => {

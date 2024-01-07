@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Components, Layouts } from "../../global";
-import { dashboardThunkActions as DBT } from "../../redux/thunkActions";
+import { dashboardThunkActions as DTA } from "../../redux/thunkActions";
 import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
@@ -18,9 +18,9 @@ export const Overview = () => {
   const { userList, orderList, isError, message, isLoading, stats } = useSelector((state) => state.dashboard);
 
   const $initPageData = () => {
-    dispatch(DBT.getAllStoreUsers());
-    dispatch(DBT.getAllStoreOrders());
-    dispatch(DBT.getOrdersStats());
+    dispatch(DTA.GET_ALL_STORE_USERS());
+    dispatch(DTA.GET_ALL_STORE_ORDERS());
+    dispatch(DTA.GET_USER_PAYMENT_PREFERENCE());
   };
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export const Overview = () => {
           <Components.Dashboard.Overview.UserPreferences
             paymentMethod={stats.paymentMethod}
             $reloadAction={() => {
-              dispatch(DBT.getAllStoreOrders());
+              dispatch(DTA.GET_ALL_STORE_ORDERS());
               toast("Reloading Orders....");
             }}
           />
@@ -64,14 +64,14 @@ export const Overview = () => {
           <Components.Dashboard.Overview.NewCustomerCard
             userList={userList}
             $reloadAction={() => {
-              dispatch(DBT.getAllStoreUsers());
+              dispatch(DTA.GET_ALL_STORE_USERS());
               toast("Reloading Users....");
             }}
           />
           <Components.Dashboard.Overview.RecentOrderCard
             orderList={orderList}
             $reloadAction={() => {
-              dispatch(DBT.getAllStoreOrders());
+              dispatch(DTA.getAllStoreOrders());
               toast("Reloading Orders....");
             }}
           />

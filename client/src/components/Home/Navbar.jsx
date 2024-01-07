@@ -18,8 +18,8 @@ import { IconShoppingBag, IconChevronDown, IconUserCircle, IconLayoutSidebarLeft
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { ShowToAuthenticated, ShowToUnAuthenticated } from "../Authentication";
-import { logoutUser } from "../../redux/features/authSlice";
 import { homeList } from "../../navigation/homeList";
+import { authThunkActions as ATA } from "../../redux/thunkActions";
 
 export const Navbar = () => {
   const { user } = useSelector((state) => state.auth);
@@ -92,7 +92,7 @@ const RenderUserActionMenuButton = ({ user }) => {
 
   const $logoutUserHandler = () => {
     navigate("/");
-    dispatch(logoutUser());
+    dispatch(ATA.LOGOUT_USER());
   };
 
   const userOptionList = [

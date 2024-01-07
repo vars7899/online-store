@@ -1,6 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as categoryService from "../services/category";
-import * as productService from "../services/product";
+import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
 import { dashboardThunkActions as DTA } from "../thunkActions";
 import { $pendingHandler, $fulfilledHandler, $rejectionHandler } from "../utils";
@@ -38,80 +36,6 @@ const initialState = {
   },
 };
 
-// GET_ALL_PRODUCT_CATEGORIES
-export const GET_ALL_PRODUCT_CATEGORIES = createAsyncThunk("dashboard/getAllProductCategories", async (thunkAPI) => {
-  try {
-    return await categoryService.getAllProductCategories();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY
-export const GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY = createAsyncThunk(
-  "dashboard/getAllProductAssociatedWithCategory",
-  async (data, thunkAPI) => {
-    try {
-      return await categoryService.getAllProductAssociatedWithCategory(data);
-    } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-// GET_ALL_PRODUCTS
-export const GET_ALL_PRODUCTS = createAsyncThunk("dashboard/getAllProducts", async (thunkAPI) => {
-  try {
-    return await productService.getAllProducts();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// UPDATE_PRODUCT_FEATURE_VISIBILITY
-export const UPDATE_PRODUCT_FEATURE_VISIBILITY = createAsyncThunk(
-  "dashboard/updateProductFeatureVisibility",
-  async (data, thunkAPI) => {
-    try {
-      return await productService.updateProductFeatureVisibility(data);
-    } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-// GET_PRODUCT_DETAILS
-export const GET_PRODUCT_DETAILS = createAsyncThunk("dashboard/getProductDetails", async (data, thunkAPI) => {
-  try {
-    return await productService.getProductDetails(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-// CREATE_NEW_PRODUCT
-export const CREATE_NEW_PRODUCT = createAsyncThunk("dashboard/createNewProduct", async (data, thunkAPI) => {
-  try {
-    return await productService.createNewProduct(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
 const TYPE_OF_ORDER_STATE = [
   { setName: "pending", key: "Pending/Unpaid" },
   { setName: "paid", key: "Paid" },
@@ -146,6 +70,7 @@ const dashboardSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // << CREATE_NEW_PRODUCT_CATEGORY
     builder.addCase(DTA.CREATE_NEW_PRODUCT_CATEGORY.pending, (state) => {
       $pendingHandler(state);
     });
@@ -156,140 +81,142 @@ const dashboardSlice = createSlice({
       $fulfilledHandler(state, action);
       state.categoryList = action.payload.categoryList;
     });
-    builder.addCase(GET_ALL_PRODUCT_CATEGORIES.pending, (state) => {
+    // << GET_ALL_PRODUCT_CATEGORIES
+    builder.addCase(DTA.GET_ALL_PRODUCT_CATEGORIES.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(GET_ALL_PRODUCT_CATEGORIES.rejected, (state, action) => {
+    builder.addCase(DTA.GET_ALL_PRODUCT_CATEGORIES.rejected, (state, action) => {
       $rejectionHandler(state, action);
       state.categoryList = [];
     });
-    builder.addCase(GET_ALL_PRODUCT_CATEGORIES.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_ALL_PRODUCT_CATEGORIES.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.categoryList = action.payload.categoryList;
     });
-    builder.addCase(GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY.pending, (state) => {
+    // << GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY
+    builder.addCase(DTA.GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY.rejected, (state, action) => {
+    builder.addCase(DTA.GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY.rejected, (state, action) => {
       $rejectionHandler(state, action);
       state.selectedCategoryProducts = [];
     });
-    builder.addCase(GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedCategoryProducts = action.payload.productList;
     });
-    // ! GET_ALL_PRODUCTS
-    builder.addCase(GET_ALL_PRODUCTS.pending, (state) => {
+    // << GET_ALL_PRODUCTS
+    builder.addCase(DTA.GET_ALL_PRODUCTS.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(GET_ALL_PRODUCTS.rejected, (state, action) => {
+    builder.addCase(DTA.GET_ALL_PRODUCTS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(GET_ALL_PRODUCTS.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_ALL_PRODUCTS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.productList = action.payload.productList;
     });
-    // ! UPDATE_PRODUCT_FEATURE_VISIBILITY
-    builder.addCase(UPDATE_PRODUCT_FEATURE_VISIBILITY.pending, (state) => {
+    // << UPDATE_PRODUCT_FEATURE_VISIBILITY
+    builder.addCase(DTA.UPDATE_PRODUCT_FEATURE_VISIBILITY.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(UPDATE_PRODUCT_FEATURE_VISIBILITY.rejected, (state, action) => {
+    builder.addCase(DTA.UPDATE_PRODUCT_FEATURE_VISIBILITY.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(UPDATE_PRODUCT_FEATURE_VISIBILITY.fulfilled, (state, action) => {
+    builder.addCase(DTA.UPDATE_PRODUCT_FEATURE_VISIBILITY.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.productList = action.payload.productList;
     });
-    // ! GET_PRODUCT_DETAILS
-    builder.addCase(GET_PRODUCT_DETAILS.pending, (state) => {
+    // << GET_PRODUCT_DETAILS
+    builder.addCase(DTA.GET_PRODUCT_DETAILS.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(GET_PRODUCT_DETAILS.rejected, (state, action) => {
+    builder.addCase(DTA.GET_PRODUCT_DETAILS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(GET_PRODUCT_DETAILS.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_PRODUCT_DETAILS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedProduct = action.payload.product;
     });
-    // ! CREATE_NEW_PRODUCT
-    builder.addCase(CREATE_NEW_PRODUCT.pending, (state) => {
+    // << CREATE_NEW_PRODUCT
+    builder.addCase(DTA.CREATE_NEW_PRODUCT.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(CREATE_NEW_PRODUCT.rejected, (state, action) => {
+    builder.addCase(DTA.CREATE_NEW_PRODUCT.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(CREATE_NEW_PRODUCT.fulfilled, (state, action) => {
+    builder.addCase(DTA.CREATE_NEW_PRODUCT.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       toast.success("Product was added to the catalog successfully.");
     });
-    // >> getAllStoreOrders
-    builder.addCase(DTA.getAllStoreOrders.pending, (state) => {
+    // << GET_ALL_STORE_ORDERS
+    builder.addCase(DTA.GET_ALL_STORE_ORDERS.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(DTA.getAllStoreOrders.rejected, (state, action) => {
+    builder.addCase(DTA.GET_ALL_STORE_ORDERS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(DTA.getAllStoreOrders.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_ALL_STORE_ORDERS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.orderList = action.payload.orderList;
     });
-    // >> getOrderDetails
-    builder.addCase(DTA.getOrderDetails.pending, (state) => {
+    // << GET_ORDER_DETAILS
+    builder.addCase(DTA.GET_ORDER_DETAILS.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(DTA.getOrderDetails.rejected, (state, action) => {
+    builder.addCase(DTA.GET_ORDER_DETAILS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(DTA.getOrderDetails.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_ORDER_DETAILS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedOrder = action.payload.order;
     });
-    // >> updateOrderState
-    builder.addCase(DTA.updateOrderState.pending, (state) => {
+    // << UPDATE_ORDER_STATE
+    builder.addCase(DTA.UPDATE_ORDER_STATE.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(DTA.updateOrderState.rejected, (state, action) => {
+    builder.addCase(DTA.UPDATE_ORDER_STATE.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(DTA.updateOrderState.fulfilled, (state, action) => {
+    builder.addCase(DTA.UPDATE_ORDER_STATE.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedOrder = action.payload.order;
     });
-    // >> getAllStoreUsers
-    builder.addCase(DTA.getAllStoreUsers.pending, (state) => {
+    // << GET_ALL_STORE_USERS
+    builder.addCase(DTA.GET_ALL_STORE_USERS.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(DTA.getAllStoreUsers.rejected, (state, action) => {
+    builder.addCase(DTA.GET_ALL_STORE_USERS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(DTA.getAllStoreUsers.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_ALL_STORE_USERS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.userList = action.payload.userList;
     });
-    // >> getOrdersStats
-    builder.addCase(DTA.getOrdersStats.pending, (state) => {
+    // << GET_USER_PAYMENT_PREFERENCE
+    builder.addCase(DTA.GET_USER_PAYMENT_PREFERENCE.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(DTA.getOrdersStats.rejected, (state, action) => {
+    builder.addCase(DTA.GET_USER_PAYMENT_PREFERENCE.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(DTA.getOrdersStats.fulfilled, (state, action) => {
+    builder.addCase(DTA.GET_USER_PAYMENT_PREFERENCE.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.stats.paymentMethod = action.payload.paymentMethodStat;
     });
-    // >> updateProductDetails
-    builder.addCase(DTA.updateProductDetails.pending, (state) => {
+    // << UPDATE_PRODUCT_DETAILS
+    builder.addCase(DTA.UPDATE_PRODUCT_DETAILS.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(DTA.updateProductDetails.rejected, (state, action) => {
+    builder.addCase(DTA.UPDATE_PRODUCT_DETAILS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(DTA.updateProductDetails.fulfilled, (state, action) => {
+    builder.addCase(DTA.UPDATE_PRODUCT_DETAILS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedProduct = action.payload.product;
       toast.success(action.payload.message);
     });
-    // >> GET_ALL_ORDERS_ASSOCIATED_WITH_PRODUCT
+    // << GET_ALL_ORDERS_ASSOCIATED_WITH_PRODUCT
     builder.addCase(DTA.GET_ALL_ORDERS_ASSOCIATED_WITH_PRODUCT.pending, (state) => {
       $pendingHandler(state);
     });

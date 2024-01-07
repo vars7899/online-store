@@ -4,8 +4,8 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { passwordStrength } from "check-password-strength";
 import toast from "react-hot-toast";
-import * as authActions from "../../redux/features/authSlice";
 import { PasswordChecklist } from "./PasswordChecklist";
+import { authThunkActions as ATA } from "../../redux/thunkActions";
 
 const defaultUserPasswordDetails = {
   oldPassword: "",
@@ -43,7 +43,7 @@ export const UpdateUserPasswordForm = ({ isLoading }) => {
       return toast.error("It appears that new password is to weak, please choose a strong password");
     }
 
-    dispatch(authActions.UPDATE_USER_PASSWORD(userPasswordDetails));
+    dispatch(ATA.UPDATE_USER_PASSWORD(userPasswordDetails));
   };
 
   return (

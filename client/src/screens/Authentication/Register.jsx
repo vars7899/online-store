@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import isValidEmail from "../../functions/isValidEmail";
 import { phone as isValidPhone } from "phone";
-import { REGISTER_USER, RESET_AUTH } from "../../redux/features/authSlice";
+import { RESET_AUTH } from "../../redux/features/authSlice";
+import { authThunkActions as ATA } from "../../redux/thunkActions";
 
 const defaultUserDetails = {
   firstName: "",
@@ -58,7 +59,7 @@ export const Register = () => {
         "The password provided is not strong. Passwords should contain at least eight characters and include uppercase letters, lowercase letters, symbols, and numbers."
       );
     }
-    dispatch(REGISTER_USER(userDetails));
+    dispatch(ATA.REGISTER_USER(userDetails));
   };
   // >> Side-effect
   useEffect(() => {

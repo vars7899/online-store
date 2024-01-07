@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { IconFileUpload, IconRestore } from "@tabler/icons-react";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { dashboardThunkActions } from "../../../redux/thunkActions";
+import { dashboardThunkActions as DTA } from "../../../redux/thunkActions";
 
 const DangerSettings = ({ product }) => {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const DangerSettings = ({ product }) => {
       productFormData.append("isActive", values.isActive);
       productFormData.append("buyingLimit", values.buyingLimit);
 
-      dispatch(dashboardThunkActions.updateProductDetails({ productId: product._id, formData: productFormData }));
+      dispatch(DTA.UPDATE_PRODUCT_DETAILS({ productId: product._id, formData: productFormData }));
     },
   });
 

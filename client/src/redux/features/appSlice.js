@@ -5,15 +5,15 @@ const initialState = {
 };
 
 const appSlice = createSlice({
-  name: "app",
+  name: "APP",
   initialState,
   reducers: {
-    updateAdminSideBar(state) {
+    UPDATE_ADMIN_SIDEBAR(state) {
       state.expandAdminSideBar = !state.expandAdminSideBar;
     },
   },
 });
 
-export const { updateAdminSideBar } = appSlice.actions;
+export const { UPDATE_ADMIN_SIDEBAR } = appSlice.actions;
 
 export default appSlice.reducer;

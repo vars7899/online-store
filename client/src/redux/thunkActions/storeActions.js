@@ -9,7 +9,7 @@ import { orderServices } from "../services";
 // GET_ALL_STORE_PRODUCTS
 export const GET_ALL_STORE_PRODUCTS = createAsyncThunk("store/getAllStoreProducts", async (thunkAPI) => {
   try {
-    return await productService.getAllProducts();
+    return await productService.GET_ALL_PRODUCTS();
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -22,7 +22,7 @@ export const GET_ALL_STORE_PRODUCT_CATEGORIES = createAsyncThunk(
   "store/getAllStoreProductCategories",
   async (thunkAPI) => {
     try {
-      return await categoryService.getAllProductCategories();
+      return await categoryService.GET_ALL_PRODUCT_CATEGORIES();
     } catch (error) {
       const message =
         (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -34,7 +34,7 @@ export const GET_ALL_STORE_PRODUCT_CATEGORIES = createAsyncThunk(
 // GET_PRODUCT_DETAILS
 export const GET_STORE_PRODUCT_DETAILS = createAsyncThunk("store/getStoreProductDetails", async (data, thunkAPI) => {
   try {
-    return await productService.getProductDetails(data);
+    return await productService.GET_PRODUCT_DETAILS(data);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) || error.message || error.toString();

@@ -1,5 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { authServices, userServices } from "../services";
+import { createSlice } from "@reduxjs/toolkit";
+import { authThunkActions as ATA } from "../thunkActions";
+import { $pendingHandler, $rejectionHandler, $fulfilledHandler } from "../utils";
 import toast from "react-hot-toast";
 
 const initialState = {
@@ -11,93 +12,8 @@ const initialState = {
   isLoggedIn: false,
 };
 
-export const REGISTER_USER = createAsyncThunk("auth/registerUser", async (data, thunkAPI) => {
-  try {
-    return await authServices.registerUser(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-export const LOGIN_USER = createAsyncThunk("auth/loginUser", async (data, thunkAPI) => {
-  try {
-    return await authServices.loginUser(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-export const CHECK_LOGIN_STATUS = createAsyncThunk("auth/checkLoginStatus", async (_, thunkAPI) => {
-  try {
-    return await authServices.checkLoginStatus();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// ! UPDATE_USER_DETAILS
-export const UPDATE_USER_DETAILS = createAsyncThunk("auth/updateUserDetails", async (data, thunkAPI) => {
-  try {
-    return await userServices.updateUserDetails(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// ! UPDATE_USER_PASSWORD
-export const UPDATE_USER_PASSWORD = createAsyncThunk("auth/updateUserPassword", async (data, thunkAPI) => {
-  try {
-    return await userServices.updateUserPassword(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// >> logoutUser
-export const logoutUser = createAsyncThunk("auth/logoutUser", async (data, thunkAPI) => {
-  try {
-    return await authServices.logoutUser(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-export const getUserDetails = createAsyncThunk("auth/getUserDetails", async (thunkAPI) => {
-  try {
-    return await userServices.getUserDetails();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
-const $rejectionHandler = (state, action) => {
-  state.isLoading = false;
-  state.isError = true;
-  state.message = action.payload;
-};
-const $fulfilledHandler = (state, action) => {
-  state.isLoading = false;
-  state.isSuccess = true;
-  state.message = action.payload.message;
-};
 const authSlice = createSlice({
-  name: "auth",
+  name: "AUTH",
   initialState,
   reducers: {
     RESET_AUTH(state) {
@@ -108,113 +24,93 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // REGISTER_USER
-    builder.addCase(REGISTER_USER.pending, (state) => {
-      state.isLoading = true;
+    // << REGISTER_USER
+    builder.addCase(ATA.REGISTER_USER.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(REGISTER_USER.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.REGISTER_USER.rejected, (state, action) => {
+      $rejectionHandler(state, action);
       state.user = null;
       state.isLoggedIn = false;
     });
-    builder.addCase(REGISTER_USER.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.REGISTER_USER.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = true;
       toast.success(action.payload.message);
     });
-    // LOGIN_USER
-    builder.addCase(LOGIN_USER.pending, (state) => {
-      state.isLoading = true;
+    // << LOGIN_USER
+    builder.addCase(ATA.LOGIN_USER.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(LOGIN_USER.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.LOGIN_USER.rejected, (state, action) => {
+      $rejectionHandler(state, action);
       state.user = null;
       state.isLoggedIn = false;
     });
-    builder.addCase(LOGIN_USER.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.LOGIN_USER.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = true;
     });
-    // CHECK_LOGIN_STATUS
-    builder.addCase(CHECK_LOGIN_STATUS.pending, (state) => {
-      state.isLoading = true;
+    // << CHECK_LOGIN_STATUS
+    builder.addCase(ATA.CHECK_LOGIN_STATUS.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(CHECK_LOGIN_STATUS.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.CHECK_LOGIN_STATUS.rejected, (state, action) => {
+      $rejectionHandler(state, action);
     });
-    builder.addCase(CHECK_LOGIN_STATUS.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.CHECK_LOGIN_STATUS.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = action.payload.success;
     });
-    // ! UPDATE_USER_DETAILS
-    builder.addCase(UPDATE_USER_DETAILS.pending, (state) => {
-      state.isLoading = true;
+    // << UPDATE_USER_DETAILS
+    builder.addCase(ATA.UPDATE_USER_DETAILS.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(UPDATE_USER_DETAILS.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.UPDATE_USER_DETAILS.rejected, (state, action) => {
+      $rejectionHandler(state, action);
     });
-    builder.addCase(UPDATE_USER_DETAILS.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.UPDATE_USER_DETAILS.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = action.payload.success;
     });
-    // ! UPDATE_USER_PASSWORD
-    builder.addCase(UPDATE_USER_PASSWORD.pending, (state) => {
-      state.isLoading = true;
+    // << UPDATE_USER_PASSWORD
+    builder.addCase(ATA.UPDATE_USER_PASSWORD.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(UPDATE_USER_PASSWORD.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.UPDATE_USER_PASSWORD.rejected, (state, action) => {
+      $rejectionHandler(state, action);
     });
-    builder.addCase(UPDATE_USER_PASSWORD.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.message = action.payload.message;
+    builder.addCase(ATA.UPDATE_USER_PASSWORD.fulfilled, (state, action) => {
+      $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = action.payload.success;
       toast.success("Profile password updated successfully");
     });
-    // !! logoutUser
-    builder.addCase(logoutUser.pending, (state) => {
-      state.isLoading = true;
+    // << LOGOUT_USER
+    builder.addCase(ATA.LOGOUT_USER.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(logoutUser.rejected, (state, action) => {
+    builder.addCase(ATA.LOGOUT_USER.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(logoutUser.fulfilled, (state, action) => {
+    builder.addCase(ATA.LOGOUT_USER.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = action.payload.success;
       toast.success("User logged out");
     });
-    // !! getUserDetails
-    builder.addCase(getUserDetails.pending, (state) => {
-      state.isLoading = true;
+    // << GET_USER_DETAILS
+    builder.addCase(ATA.GET_USER_DETAILS.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(getUserDetails.rejected, (state, action) => {
+    builder.addCase(ATA.GET_USER_DETAILS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(getUserDetails.fulfilled, (state, action) => {
+    builder.addCase(ATA.GET_USER_DETAILS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.user = action.payload.user;
       state.isLoggedIn = action.payload.success;

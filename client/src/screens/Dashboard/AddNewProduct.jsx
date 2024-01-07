@@ -15,9 +15,10 @@ import {
 } from "@chakra-ui/react";
 import { IconPhotoUp } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_NEW_PRODUCT, GET_ALL_PRODUCT_CATEGORIES, RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
+import { RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { dashboardThunkActions as DTA } from "../../redux/thunkActions";
 
 const defaultFormData = {
   name: "",
@@ -97,12 +98,12 @@ export const AddNewProduct = () => {
     newProductDetails.append("height", height);
     newProductDetails.append("weight", weight);
     newProductDetails.append("file", productImage);
-    dispatch(CREATE_NEW_PRODUCT(newProductDetails));
+    dispatch(DTA.CREATE_NEW_PRODUCT(newProductDetails));
     navigate("/dashboard/products");
   };
 
   const $initPage = () => {
-    dispatch(GET_ALL_PRODUCT_CATEGORIES());
+    dispatch(DTA.GET_ALL_PRODUCT_CATEGORIES());
   };
 
   useEffect(() => {

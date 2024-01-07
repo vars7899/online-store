@@ -1,7 +1,7 @@
 import { Avatar, IconButton } from "@chakra-ui/react";
 import { IconLayoutSidebarLeftExpand } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateAdminSideBar } from "../../redux/features/appSlice";
+import { UPDATE_ADMIN_SIDEBAR } from "../../redux/features/appSlice";
 
 export const TopBar = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ export const TopBar = () => {
           <IconButton
             icon={<IconLayoutSidebarLeftExpand />}
             variant={"outline"}
-            onClick={() => dispatch(updateAdminSideBar())}
+            onClick={() => dispatch(UPDATE_ADMIN_SIDEBAR())}
           />
           <div className="ml-4">
             <p className="text-lg">Dashboard</p>

@@ -3,7 +3,7 @@ import * as Components from "../../components";
 import { Button, Input, Tag } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { GET_ALL_PRODUCT_CATEGORIES, RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
+import { RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
 import { toast } from "react-hot-toast";
 import { dashboardThunkActions as DTA } from "../../redux/thunkActions";
 
@@ -13,7 +13,7 @@ export const ProductCategory = () => {
   const { isLoading, isSuccess, isError, message, categoryList } = useSelector((state) => state.dashboard);
 
   const $initPage = () => {
-    dispatch(GET_ALL_PRODUCT_CATEGORIES());
+    dispatch(DTA.GET_ALL_PRODUCT_CATEGORIES());
   };
 
   const $handleAddNewCategory = (e) => {

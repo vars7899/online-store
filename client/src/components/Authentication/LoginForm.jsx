@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormControl, FormLabel, Input, FormHelperText, Button } from "@chakra-ui/react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { LOGIN_USER, RESET_AUTH } from "../../redux/features/authSlice";
+import { RESET_AUTH } from "../../redux/features/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { authThunkActions as ATA } from "../../redux/thunkActions";
 
 const defaultFormData = {
   email: "",
@@ -29,7 +30,7 @@ export const LoginForm = () => {
       return;
     }
 
-    await dispatch(LOGIN_USER(formData));
+    await dispatch(ATA.LOGIN_USER(formData));
   };
 
   useEffect(() => {

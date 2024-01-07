@@ -4,9 +4,10 @@ import * as Components from "../../../components";
 import { IconCopy, IconExternalLink, IconLink, IconStar, IconStarFilled } from "@tabler/icons-react";
 import copy from "copy-text-to-clipboard";
 import { useDispatch, useSelector } from "react-redux";
-import { RESET_DASHBOARD, UPDATE_PRODUCT_FEATURE_VISIBILITY } from "../../../redux/features/dashboardSlice";
+import { RESET_DASHBOARD } from "../../../redux/features/dashboardSlice";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { dashboardThunkActions as DTA } from "../../../redux/thunkActions";
 
 export const ProductListTable = ({ productList }) => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export const ProductListTable = ({ productList }) => {
               size={"sm"}
               variant={"ghost"}
               colorScheme="blue"
-              onClick={() => dispatch(UPDATE_PRODUCT_FEATURE_VISIBILITY(val.getValue()._id))}
+              onClick={() => dispatch(DTA.UPDATE_PRODUCT_FEATURE_VISIBILITY(val.getValue()._id))}
             >
               <IconStarFilled size={"20"} />
             </IconButton>
@@ -43,7 +44,7 @@ export const ProductListTable = ({ productList }) => {
               size={"sm"}
               variant={"ghost"}
               colorScheme="blackAlpha"
-              onClick={() => dispatch(UPDATE_PRODUCT_FEATURE_VISIBILITY(val.getValue()._id))}
+              onClick={() => dispatch(DTA.UPDATE_PRODUCT_FEATURE_VISIBILITY(val.getValue()._id))}
             >
               <IconStar size={"20"} />
             </IconButton>

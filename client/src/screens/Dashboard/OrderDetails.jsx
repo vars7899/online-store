@@ -15,11 +15,11 @@ export const OrderDetails = () => {
   const { selectedOrder, isLoading } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    dispatch(DTA.getOrderDetails(orderId));
+    dispatch(DTA.GET_ORDER_DETAILS(orderId));
   }, []);
 
   const $updateOrderStateHandler = (state) => {
-    dispatch(DTA.updateOrderState({ orderId, state }));
+    dispatch(DTA.UPDATE_ORDER_STATE({ orderId, state }));
   };
 
   if (!selectedOrder) return <div>nothing</div>;

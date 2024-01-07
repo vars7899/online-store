@@ -2,12 +2,12 @@ import { Layouts, Components } from "../../global";
 import { useParams } from "react-router-dom";
 import { Suspense, lazy, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_ALL_PRODUCT_CATEGORIES, GET_PRODUCT_DETAILS, RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
+import { RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
 import { toast } from "react-hot-toast";
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Tag, Divider, Image, Button } from "@chakra-ui/react";
 import { IconAlertTriangle, IconRefresh } from "@tabler/icons-react";
 import { DateTime } from "luxon";
-import { dashboardThunkActions } from "../../redux/thunkActions";
+import { dashboardThunkActions as DTA } from "../../redux/thunkActions";
 
 const CustomerReviewAnalysisSection = lazy(() => import("../../components/Dashboard/Product/CustomerReviewAnalysis"));
 const DangerSettingsSection = lazy(() => import("../../components/Dashboard/Product/DangerSettings"));
@@ -19,9 +19,9 @@ export const ProductDetails = () => {
   const { isError, message, selectedProduct, categoryList, isLoading } = useSelector((state) => state.dashboard);
 
   const $initPage = () => {
-    dispatch(GET_PRODUCT_DETAILS(params.productId));
-    dispatch(GET_ALL_PRODUCT_CATEGORIES());
-    dispatch(dashboardThunkActions.GET_ALL_ORDERS_ASSOCIATED_WITH_PRODUCT(params.productId));
+    dispatch(DTA.GET_PRODUCT_DETAILS(params.productId));
+    dispatch(DTA.GET_ALL_PRODUCT_CATEGORIES());
+    dispatch(DTA.GET_ALL_ORDERS_ASSOCIATED_WITH_PRODUCT(params.productId));
   };
 
   useEffect(() => {

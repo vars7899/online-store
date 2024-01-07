@@ -10,7 +10,7 @@ export const UserList = () => {
   const { userList, isLoading, isError, message } = useSelector((state) => state.dashboard);
 
   function $initPage() {
-    dispatch(dashboardThunkActions.getAllStoreUsers());
+    dispatch(dashboardThunkActions.GET_ALL_STORE_USERS());
   }
 
   useEffect(() => {

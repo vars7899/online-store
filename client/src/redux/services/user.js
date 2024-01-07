@@ -30,11 +30,11 @@ export const addProductToUserWishlist = async (productId) => {
   const { data } = await axios.patch(API + "/wishlist/" + productId);
   return data;
 };
-export const updateUserDetails = async (formData) => {
+export const UPDATE_USER_DETAILS = async (formData) => {
   const { data } = await axios.patch(API + "/update-details", formData);
   return data;
 };
-export const updateUserPassword = async (formData) => {
+export const UPDATE_USER_PASSWORD = async (formData) => {
   const { data } = await axios.patch(API + "/update-password", formData);
   return data;
 };
@@ -42,7 +42,7 @@ export const updateCartItemQty = async ({ cartItemId, changeValue }) => {
   const { data } = await axios.patch(API + "/cart/update-cart/" + cartItemId, { changeValue });
   return data;
 };
-export const getUserDetails = async () => {
+export const GET_USER_DETAILS = async () => {
   const { data } = await axios.get(API);
   return data;
 };

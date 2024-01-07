@@ -11,10 +11,11 @@ import {
 import { IconUfo } from "@tabler/icons-react";
 import { DateTime } from "luxon";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY, RESET_DASHBOARD } from "../../../redux/features/dashboardSlice";
+import { RESET_DASHBOARD } from "../../../redux/features/dashboardSlice";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { dashboardThunkActions as DTA } from "../../../redux/thunkActions";
 
 export const ProductCategoryList = ({ categoryList }) => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const ProductCategoryList = ({ categoryList }) => {
 
   const $getMoreDetailsAboutCategory = (categoryId) => {
     if (!categoryList || categoryList.numberOfProducts <= 0) return;
-    dispatch(GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY(categoryId));
+    dispatch(DTA.GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY(categoryId));
   };
 
   useEffect(() => {

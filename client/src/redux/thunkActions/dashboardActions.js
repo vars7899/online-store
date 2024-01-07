@@ -2,51 +2,51 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { adminServices, orderServices, productServices, categoryServices } from "../services";
 import { thunkRejectWithMessage } from "../thunkRejectWithMessage";
 
-// >> getAllStoreOrders
-export const getAllStoreOrders = createAsyncThunk("DASHBOARD/getAllStoreOrders", async (data, thunkAPI) => {
+// << GET_ALL_STORE_ORDERS
+export const GET_ALL_STORE_ORDERS = createAsyncThunk("DASHBOARD/GET_ALL_STORE_ORDERS", async (data, thunkAPI) => {
   try {
-    return await adminServices.getAllStoreOrders(data);
+    return await adminServices.GET_ALL_STORE_ORDERS(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// >> getOrderDetails
-export const getOrderDetails = createAsyncThunk("DASHBOARD/getOrderDetails", async (data, thunkAPI) => {
+// << GET_ORDER_DETAILS
+export const GET_ORDER_DETAILS = createAsyncThunk("DASHBOARD/GET_ORDER_DETAILS", async (data, thunkAPI) => {
   try {
-    return await adminServices.getOrderDetails(data);
+    return await adminServices.GET_ORDER_DETAILS(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// >> updateOrderState
-export const updateOrderState = createAsyncThunk("DASHBOARD/updateOrderState", async (data, thunkAPI) => {
+// << UPDATE_ORDER_STATE
+export const UPDATE_ORDER_STATE = createAsyncThunk("DASHBOARD/UPDATE_ORDER_STATE", async (data, thunkAPI) => {
   try {
-    return await adminServices.updateOrderState(data);
+    return await adminServices.UPDATE_ORDER_STATE(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// >> getAllStoreUsers
-export const getAllStoreUsers = createAsyncThunk("DASHBOARD/getAllStoreUsers", async (data, thunkAPI) => {
+// << GET_ALL_STORE_USERS
+export const GET_ALL_STORE_USERS = createAsyncThunk("DASHBOARD/GET_ALL_STORE_USERS", async (data, thunkAPI) => {
   try {
-    return await adminServices.getAllUsers(data);
+    return await adminServices.GET_ALL_STORE_USERS(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// >> getOrdersStats
-export const getOrdersStats = createAsyncThunk("DASHBOARD/getOrdersStats", async (data, thunkAPI) => {
+// << GET_USER_PAYMENT_PREFERENCE
+export const GET_USER_PAYMENT_PREFERENCE = createAsyncThunk("DASHBOARD/GET_USER_PAYMENT_PREFERENCE", async (data, thunkAPI) => {
   try {
-    return await adminServices.getOrdersStats(data);
+    return await adminServices.GET_USER_PAYMENT_PREFERENCE(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }
 });
 
-// >> updateProductDetails
-export const updateProductDetails = createAsyncThunk("DASHBOARD/updateProductDetails", async (data, thunkAPI) => {
+// << UPDATE_PRODUCT_DETAILS
+export const UPDATE_PRODUCT_DETAILS = createAsyncThunk("DASHBOARD/UPDATE_PRODUCT_DETAILS", async (data, thunkAPI) => {
   try {
-    return await productServices.updateProductDetails(data);
+    return await productServices.UPDATE_PRODUCT_DETAILS(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }
@@ -75,3 +75,63 @@ export const CREATE_NEW_PRODUCT_CATEGORY = createAsyncThunk(
     }
   }
 );
+
+// << GET_ALL_PRODUCT_CATEGORIES
+export const GET_ALL_PRODUCT_CATEGORIES = createAsyncThunk("DASHBOARD/GET_ALL_PRODUCT_CATEGORIES", async (thunkAPI) => {
+  try {
+    return await categoryServices.GET_ALL_PRODUCT_CATEGORIES();
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
+  }
+});
+
+// << GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY
+export const GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY = createAsyncThunk(
+  "DASHBOARD/GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY",
+  async (data, thunkAPI) => {
+    try {
+      return await categoryServices.GET_ALL_PRODUCT_ASSOCIATED_WITH_CATEGORY(data);
+    } catch (error) {
+      thunkRejectWithMessage(error, thunkAPI);
+    }
+  }
+);
+
+// << GET_ALL_PRODUCTS
+export const GET_ALL_PRODUCTS = createAsyncThunk("DASHBOARD/GET_ALL_PRODUCTS", async (thunkAPI) => {
+  try {
+    return await productServices.GET_ALL_PRODUCTS();
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
+  }
+});
+
+// << UPDATE_PRODUCT_FEATURE_VISIBILITY
+export const UPDATE_PRODUCT_FEATURE_VISIBILITY = createAsyncThunk(
+  "DASHBOARD/UPDATE_PRODUCT_FEATURE_VISIBILITY",
+  async (data, thunkAPI) => {
+    try {
+      return await productServices.UPDATE_PRODUCT_FEATURE_VISIBILITY(data);
+    } catch (error) {
+      thunkRejectWithMessage(error, thunkAPI);
+    }
+  }
+);
+
+// << GET_PRODUCT_DETAILS
+export const GET_PRODUCT_DETAILS = createAsyncThunk("DASHBOARD/GET_PRODUCT_DETAILS", async (data, thunkAPI) => {
+  try {
+    return await productServices.GET_PRODUCT_DETAILS(data);
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
+  }
+});
+
+// << CREATE_NEW_PRODUCT
+export const CREATE_NEW_PRODUCT = createAsyncThunk("DASHBOARD/CREATE_NEW_PRODUCT", async (data, thunkAPI) => {
+  try {
+    return await productServices.CREATE_NEW_PRODUCT(data);
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
+  }
+});
