@@ -21,7 +21,7 @@ export const ProductDetails = () => {
   const $initPage = () => {
     dispatch(GET_PRODUCT_DETAILS(params.productId));
     dispatch(GET_ALL_PRODUCT_CATEGORIES());
-    dispatch(dashboardThunkActions.getAllOrdersWithGivenProduct(params.productId));
+    dispatch(dashboardThunkActions.GET_ALL_ORDERS_ASSOCIATED_WITH_PRODUCT(params.productId));
   };
 
   useEffect(() => {

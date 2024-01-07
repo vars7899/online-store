@@ -3,12 +3,9 @@ import * as Components from "../../components";
 import { Button, Input, Tag } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {
-  GET_ALL_PRODUCT_CATEGORIES,
-  RESET_DASHBOARD,
-  CREATE_NEW_PRODUCT_CATEGORY,
-} from "../../redux/features/dashboardSlice";
+import { GET_ALL_PRODUCT_CATEGORIES, RESET_DASHBOARD } from "../../redux/features/dashboardSlice";
 import { toast } from "react-hot-toast";
+import { dashboardThunkActions as DTA } from "../../redux/thunkActions";
 
 export const ProductCategory = () => {
   const [categoryName, setCategoryName] = useState("");
@@ -27,7 +24,7 @@ export const ProductCategory = () => {
       );
     }
     dispatch(
-      CREATE_NEW_PRODUCT_CATEGORY({
+      DTA.CREATE_NEW_PRODUCT_CATEGORY({
         name: categoryName.toLowerCase(),
       })
     );
