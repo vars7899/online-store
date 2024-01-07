@@ -14,17 +14,13 @@ export const getStoreChargesPercentage = async () => {
   const { data } = await axios.get(API + "/charges-info");
   return data;
 };
-export const updateOrderPayment = async ({ orderId, formData }) => {
-  const { data } = await axios.post(API + "/update-payment/" + orderId, formData);
-  return data;
-};
 
 export const getAllOrdersWithGivenProduct = async (formData) => {
   const { data } = await axios.get(API + "/with-product/" + formData);
   return data;
 };
 
-export const getAllUserOrders = async (formData) => {
+export const GET_ALL_USER_ORDERS = async (formData) => {
   let url_string = API + "?";
 
   if (formData) {

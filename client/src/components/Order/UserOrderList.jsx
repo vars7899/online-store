@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { orderThunkActions, storeThunkActions } from "../../redux/thunkActions";
 import toast from "react-hot-toast";
-import { resetOrder } from "../../redux/features/orderSlice";
+import { RESET_ORDER } from "../../redux/features/orderSlice";
 import { DateTime } from "luxon";
 import { Button, Divider, Image, Tag, Select, Center } from "@chakra-ui/react";
 import { IconFilter } from "@tabler/icons-react";
@@ -31,8 +31,8 @@ export const UserOrderList = () => {
     orderDuration: "all",
   });
 
-  const $initPageData = () => dispatch(orderThunkActions.getAllUserOrders());
-  const $loadOrderListWithFilter = () => dispatch(orderThunkActions.getAllUserOrders(orderFilter));
+  const $initPageData = () => dispatch(orderThunkActions.GET_ALL_USER_ORDERS());
+  const $loadOrderListWithFilter = () => dispatch(orderThunkActions.GET_ALL_USER_ORDERS(orderFilter));
 
   useEffect(() => {
     $initPageData();
@@ -40,11 +40,11 @@ export const UserOrderList = () => {
 
   useEffect(() => {
     if (isError) toast.error(message);
-    dispatch(resetOrder());
+    dispatch(RESET_ORDER());
   }, [isError, message, dispatch]);
 
   useEffect(() => {
-    dispatch(orderThunkActions.getAllUserOrders(orderFilter));
+    dispatch(orderThunkActions.GET_ALL_USER_ORDERS(orderFilter));
   }, [orderFilter.orderDuration]);
 
   // >> React Pagination

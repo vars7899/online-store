@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
 import toast from "react-hot-toast";
 import { orderThunkActions, paymentThunkActions, storeThunkActions } from "../../redux/thunkActions";
-import { resetNewOrderDetails, resetOrder } from "../../redux/features/orderSlice";
+import { RESET_NEW_ORDER_DETAILS, RESET_ORDER } from "../../redux/features/orderSlice";
 
 export const ConfirmAndPayForm = () => {
   // >> Router
@@ -41,10 +41,10 @@ export const ConfirmAndPayForm = () => {
     }
     if (isSuccess) {
       dispatch(storeThunkActions.clearUserCart());
-      dispatch(resetNewOrderDetails());
+      dispatch(RESET_NEW_ORDER_DETAILS());
       navigate("/order/order-confirmation/" + selectedOrder._id, { replace: true });
     }
-    dispatch(resetOrder());
+    dispatch(RESET_ORDER());
   }, [isError, orderMessage, dispatch]);
 
   const $createNewOrderHandler = async (e) => {
@@ -182,6 +182,7 @@ const SectionHeader = ({ className, title, desc }) => {
 
 const BottomBarContent = ({ isLoading, onClick, newOrderDetails }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div className="flex items-center justify-between">
       <div>
@@ -189,7 +190,14 @@ const BottomBarContent = ({ isLoading, onClick, newOrderDetails }) => {
         <p>{newOrderDetails.total.toFixed(2)} CAD</p>
       </div>
       <div>
-        <Button variant={"outline"} mr={4} onClick={() => navigate("/user/cart")}>
+        <Button
+          variant={"outline"}
+          mr={4}
+          onClick={() => {
+            dispatch(RESET_NEW_ORDER_DETAILS());
+            navigate("/user/cart");
+          }}
+        >
           Cancel
         </Button>
 

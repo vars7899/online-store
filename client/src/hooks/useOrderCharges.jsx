@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { orderThunkActions, storeThunkActions } from "../redux/thunkActions";
-import { updateNewOrderTotal } from "../redux/features/orderSlice";
+import { UPDATE_NEW_ORDER_TOTAL } from "../redux/features/orderSlice";
 
 export function useOrderCharges({ shippingCharges }) {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ export function useOrderCharges({ shippingCharges }) {
   const total = cartSubtotal + convenienceFee + gstFee + pstFee + shippingCharges;
 
   useEffect(() => {
-    dispatch(updateNewOrderTotal(total));
+    dispatch(UPDATE_NEW_ORDER_TOTAL(total));
   }, [total]);
 
   return {

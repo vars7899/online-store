@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as ordersThunkActions from "../thunkActions/orderActions";
+import { orderThunkActions } from "../thunkActions";
+import { $pendingHandler, $rejectionHandler, $fulfilledHandler } from "../utils";
 
 const initialState = {
   isLoading: false,
@@ -35,33 +36,20 @@ const initialState = {
   },
 };
 
-const $rejectionHandler = (state, action) => {
-  state.isLoading = false;
-  state.isError = true;
-  state.message = action.payload;
-};
-const $fulfilledHandler = (state, action) => {
-  state.isLoading = false;
-  state.isSuccess = true;
-  state.message = action.payload.message;
-};
-
 const orderSlice = createSlice({
-  name: "order",
+  name: "ORDER",
   initialState,
   reducers: {
-    resetOrder(state) {
+    RESET_ORDER(state) {
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
       state.message = null;
     },
-    // >> New order details actions
-    updateNewOrderTotal(state, action) {
+    UPDATE_NEW_ORDER_TOTAL(state, action) {
       state.newOrderDetails.total = action.payload;
     },
-
-    updateNewOrderDetails(state, action) {
+    UPDATE_NEW_ORDER_DETAILS(state, action) {
       state.newOrderDetails.isFilled = true;
       // >> Shipping details
       state.newOrderDetails.shippingMethod = action.payload.shippingMethod;
@@ -75,7 +63,7 @@ const orderSlice = createSlice({
       // >> Order items details
       state.newOrderDetails.orderItems = action.payload.orderItems;
     },
-    resetNewOrderDetails(state) {
+    RESET_NEW_ORDER_DETAILS(state) {
       state.newOrderDetails.isFilled = false;
       // >> Shipping details
       state.newOrderDetails.shippingMethod = "";
@@ -92,24 +80,25 @@ const orderSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(ordersThunkActions.createNewOrder.pending, (state) => {
-      state.isLoading = true;
+    // >> createNewOrder
+    builder.addCase(orderThunkActions.createNewOrder.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(ordersThunkActions.createNewOrder.rejected, (state, action) => {
+    builder.addCase(orderThunkActions.createNewOrder.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(ordersThunkActions.createNewOrder.fulfilled, (state, action) => {
+    builder.addCase(orderThunkActions.createNewOrder.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedOrder = action.payload.order;
     });
-    // ! generateOrderCharges
-    builder.addCase(ordersThunkActions.generateOrderCharges.pending, (state) => {
-      state.isLoading = true;
+    // >> generateOrderCharges
+    builder.addCase(orderThunkActions.generateOrderCharges.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(ordersThunkActions.generateOrderCharges.rejected, (state, action) => {
+    builder.addCase(orderThunkActions.generateOrderCharges.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(ordersThunkActions.generateOrderCharges.fulfilled, (state, action) => {
+    builder.addCase(orderThunkActions.generateOrderCharges.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.charges.subtotal = action.payload.charges.subtotal;
       state.charges.total = action.payload.charges.total;
@@ -118,31 +107,21 @@ const orderSlice = createSlice({
       state.charges.gst = action.payload.charges.gst;
       state.charges.pst = action.payload.charges.pst;
     });
-    // >> updateOrderPayment
-    builder.addCase(ordersThunkActions.updateOrderPayment.pending, (state) => {
-      state.isLoading = true;
+    // << GET_ALL_USER_ORDERS
+    builder.addCase(orderThunkActions.GET_ALL_USER_ORDERS.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(ordersThunkActions.updateOrderPayment.rejected, (state, action) => {
+    builder.addCase(orderThunkActions.GET_ALL_USER_ORDERS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(ordersThunkActions.updateOrderPayment.fulfilled, (state, action) => {
-      $fulfilledHandler(state, action);
-      state.selectedOrder = action.payload.order;
-    });
-    // >> getAllUserOrders
-    builder.addCase(ordersThunkActions.getAllUserOrders.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(ordersThunkActions.getAllUserOrders.rejected, (state, action) => {
-      $rejectionHandler(state, action);
-    });
-    builder.addCase(ordersThunkActions.getAllUserOrders.fulfilled, (state, action) => {
+    builder.addCase(orderThunkActions.GET_ALL_USER_ORDERS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.orderList = action.payload.orderList;
     });
   },
 });
 
-export const { resetOrder, updateNewOrderTotal, updateNewOrderDetails, resetNewOrderDetails } = orderSlice.actions;
+export const { RESET_ORDER, UPDATE_NEW_ORDER_TOTAL, UPDATE_NEW_ORDER_DETAILS, RESET_NEW_ORDER_DETAILS } =
+  orderSlice.actions;
 
 export default orderSlice.reducer;

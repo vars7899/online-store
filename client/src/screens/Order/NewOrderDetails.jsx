@@ -73,7 +73,7 @@ export const NewOrderDetails = () => {
   // >> Function to move user to prev step of previous page
   const $prevStepHandler = () => {
     if (currentStepIndex === 0) {
-      dispatch(orderActions.resetNewOrderDetails());
+      dispatch(orderActions.RESET_NEW_ORDER_DETAILS());
       navigate("/user/cart", { replace: true });
     } else $prevStep();
   };
@@ -81,7 +81,7 @@ export const NewOrderDetails = () => {
   // >> Function to move user to next page or right page
   const $nextStepHandler = () => {
     if (currentStepIndex === totalSteps - 1) {
-      dispatch(orderActions.updateNewOrderDetails(orderDetails)); // >> Save all new order details
+      dispatch(orderActions.UPDATE_NEW_ORDER_DETAILS(orderDetails)); // >> Save all new order details
       navigate("/order/review-order", { replace: true });
     } else {
       // >> Form Data validation

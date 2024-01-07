@@ -1,45 +1,27 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import * as orderService from "../services/order";
+import { orderServices } from "../services";
+import { thunkRejectWithMessage } from "../thunkRejectWithMessage";
 
-export const generateOrderCharges = createAsyncThunk("order/generateOrderCharges", async (data, thunkAPI) => {
+export const generateOrderCharges = createAsyncThunk("ORDER/generateOrderCharges", async (data, thunkAPI) => {
   try {
-    return await orderService.generateOrderCharges(data);
+    return await orderServices.generateOrderCharges(data);
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-export const createNewOrder = createAsyncThunk("order/createNewOrder", async (data, thunkAPI) => {
+export const createNewOrder = createAsyncThunk("ORDER/createNewOrder", async (data, thunkAPI) => {
   try {
-    return await orderService.createNewOrder(data);
+    return await orderServices.createNewOrder(data);
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// >> updateOrderPayment
-export const updateOrderPayment = createAsyncThunk("order/updateOrderPayment", async (data, thunkAPI) => {
-  try {
-    return await orderService.updateOrderPayment(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// >> getAllUserOrders
-export const getAllUserOrders = createAsyncThunk("order/getAllUserOrders", async (data, thunkAPI) => {
+// << GET_ALL_USER_ORDERS
+export const GET_ALL_USER_ORDERS = createAsyncThunk("ORDER/GET_ALL_USER_ORDERS", async (data, thunkAPI) => {
   try {
-    return await orderService.getAllUserOrders(data);
+    return await orderServices.GET_ALL_USER_ORDERS(data);
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
