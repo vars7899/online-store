@@ -2,14 +2,8 @@ import axios from "axios";
 const URL = import.meta.env.VITE_URL;
 const API = `${URL}/api/v1/order`;
 
-export const generateOrderCharges = async (formData) => {
-  const { data } = await axios.post(API + "/charges", formData);
-  return data;
-};
-export const createNewOrder = async (formData) => {
-  const { data } = await axios.post(API, formData);
-  return data;
-};
+
+
 export const getStoreChargesPercentage = async () => {
   const { data } = await axios.get(API + "/charges-info");
   return data;
@@ -17,6 +11,16 @@ export const getStoreChargesPercentage = async () => {
 
 export const getAllOrdersWithGivenProduct = async (formData) => {
   const { data } = await axios.get(API + "/with-product/" + formData);
+  return data;
+};
+
+export const CREATE_NEW_ORDER = async (formData) => {
+  const { data } = await axios.post(API, formData);
+  return data;
+};
+
+export const GET_ORDER_CHARGES = async (formData) => {
+  const { data } = await axios.post(API + "/charges", formData);
   return data;
 };
 

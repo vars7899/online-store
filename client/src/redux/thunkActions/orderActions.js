@@ -2,16 +2,20 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { orderServices } from "../services";
 import { thunkRejectWithMessage } from "../thunkRejectWithMessage";
 
-export const generateOrderCharges = createAsyncThunk("ORDER/generateOrderCharges", async (data, thunkAPI) => {
+
+// << GET_ORDER_CHARGES
+export const GET_ORDER_CHARGES = createAsyncThunk("ORDER/GET_ORDER_CHARGES", async (data, thunkAPI) => {
   try {
-    return await orderServices.generateOrderCharges(data);
+    return await orderServices.GET_ORDER_CHARGES(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }
 });
-export const createNewOrder = createAsyncThunk("ORDER/createNewOrder", async (data, thunkAPI) => {
+
+// << CREATE_NEW_ORDER
+export const CREATE_NEW_ORDER = createAsyncThunk("ORDER/CREATE_NEW_ORDER", async (data, thunkAPI) => {
   try {
-    return await orderServices.createNewOrder(data);
+    return await orderServices.CREATE_NEW_ORDER(data);
   } catch (error) {
     thunkRejectWithMessage(error, thunkAPI);
   }

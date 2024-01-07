@@ -59,7 +59,7 @@ export const ConfirmAndPayForm = () => {
 
     try {
       let paymentIntent = clientSecret.split("_secret")[0];
-      dispatch(orderThunkActions.createNewOrder({ ...newOrderDetails, paymentIntent: paymentIntent }));
+      dispatch(orderThunkActions.CREATE_NEW_ORDER({ ...newOrderDetails, paymentIntent: paymentIntent }));
       // >> Only use stripe for credit card orders
       if (newOrderDetails.paymentMethod === "credit card") {
         // >> Also define the order id to later on change the order payment status

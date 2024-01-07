@@ -80,25 +80,25 @@ const orderSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // >> createNewOrder
-    builder.addCase(orderThunkActions.createNewOrder.pending, (state) => {
+    // << CREATE_NEW_ORDER
+    builder.addCase(orderThunkActions.CREATE_NEW_ORDER.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(orderThunkActions.createNewOrder.rejected, (state, action) => {
+    builder.addCase(orderThunkActions.CREATE_NEW_ORDER.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(orderThunkActions.createNewOrder.fulfilled, (state, action) => {
+    builder.addCase(orderThunkActions.CREATE_NEW_ORDER.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedOrder = action.payload.order;
     });
-    // >> generateOrderCharges
-    builder.addCase(orderThunkActions.generateOrderCharges.pending, (state) => {
+    //  << GET_ORDER_CHARGES
+    builder.addCase(orderThunkActions.GET_ORDER_CHARGES.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(orderThunkActions.generateOrderCharges.rejected, (state, action) => {
+    builder.addCase(orderThunkActions.GET_ORDER_CHARGES.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(orderThunkActions.generateOrderCharges.fulfilled, (state, action) => {
+    builder.addCase(orderThunkActions.GET_ORDER_CHARGES.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.charges.subtotal = action.payload.charges.subtotal;
       state.charges.total = action.payload.charges.total;
