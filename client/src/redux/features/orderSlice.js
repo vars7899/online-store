@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { orderThunkActions } from "../thunkActions";
+import { orderThunkActions as OTA } from "../thunkActions";
 import { $pendingHandler, $rejectionHandler, $fulfilledHandler } from "../utils";
 
 const initialState = {
@@ -81,24 +81,24 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     // << CREATE_NEW_ORDER
-    builder.addCase(orderThunkActions.CREATE_NEW_ORDER.pending, (state) => {
+    builder.addCase(OTA.CREATE_NEW_ORDER.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(orderThunkActions.CREATE_NEW_ORDER.rejected, (state, action) => {
+    builder.addCase(OTA.CREATE_NEW_ORDER.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(orderThunkActions.CREATE_NEW_ORDER.fulfilled, (state, action) => {
+    builder.addCase(OTA.CREATE_NEW_ORDER.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.selectedOrder = action.payload.order;
     });
     //  << GET_ORDER_CHARGES
-    builder.addCase(orderThunkActions.GET_ORDER_CHARGES.pending, (state) => {
+    builder.addCase(OTA.GET_ORDER_CHARGES.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(orderThunkActions.GET_ORDER_CHARGES.rejected, (state, action) => {
+    builder.addCase(OTA.GET_ORDER_CHARGES.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(orderThunkActions.GET_ORDER_CHARGES.fulfilled, (state, action) => {
+    builder.addCase(OTA.GET_ORDER_CHARGES.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.charges.subtotal = action.payload.charges.subtotal;
       state.charges.total = action.payload.charges.total;
@@ -108,13 +108,13 @@ const orderSlice = createSlice({
       state.charges.pst = action.payload.charges.pst;
     });
     // << GET_ALL_USER_ORDERS
-    builder.addCase(orderThunkActions.GET_ALL_USER_ORDERS.pending, (state) => {
+    builder.addCase(OTA.GET_ALL_USER_ORDERS.pending, (state) => {
       $pendingHandler(state);
     });
-    builder.addCase(orderThunkActions.GET_ALL_USER_ORDERS.rejected, (state, action) => {
+    builder.addCase(OTA.GET_ALL_USER_ORDERS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(orderThunkActions.GET_ALL_USER_ORDERS.fulfilled, (state, action) => {
+    builder.addCase(OTA.GET_ALL_USER_ORDERS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.orderList = action.payload.orderList;
     });

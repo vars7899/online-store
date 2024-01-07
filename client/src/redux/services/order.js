@@ -2,7 +2,7 @@ import axios from "axios";
 const URL = import.meta.env.VITE_URL;
 const API = `${URL}/api/v1/order`;
 
-export const getStoreChargesPercentage = async () => {
+export const GET_STORE_CHARGES_PERCENTAGE = async () => {
   const { data } = await axios.get(API + "/charges-info");
   return data;
 };

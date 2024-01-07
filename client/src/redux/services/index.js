@@ -6,3 +6,4 @@ export * as adminServices from "./admin";
 export * as transactionServices from "./transaction";
 export * as productServices from "./product";
 export * as categoryServices from "./category";
+export * as addressServices from "./address";

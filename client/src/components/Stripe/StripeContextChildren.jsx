@@ -13,22 +13,11 @@ export const StripeContextChildren = ({ children }) => {
   const { clientSecret } = useSelector((state) => state.payment);
   const stripePromise = useMemo(() => loadStripe(publicKey), []);
 
-  // useEffect(() => {
-  //   if (newOrderDetails ) {
-  //     dispatch(
-  //       paymentThunkActions.createNewPaymentIntent({
-  //         orderItems: newOrderDetails.orderItems,
-  //         shippingServiceType: newOrderDetails.shippingServiceType,
-  //       })
-  //     );
-  //   }
-  // }, []);
-
   // >> Create Stripe Payment Intent when page mount and on formData change
   useEffect(() => {
     if (newOrderDetails && !alreadyFired) {
       dispatch(
-        paymentThunkActions.createNewPaymentIntent({
+        paymentThunkActions.CREATE_NEW_PAYMENT_INTENT({
           orderItems: newOrderDetails.orderItems,
           shippingServiceType: "express",
         })

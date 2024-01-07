@@ -40,7 +40,7 @@ export const ConfirmAndPayForm = () => {
       navigate("/user/cart", { replace: true });
     }
     if (isSuccess) {
-      dispatch(storeThunkActions.clearUserCart());
+      dispatch(storeThunkActions.CLEAR_USER_CART());
       dispatch(RESET_NEW_ORDER_DETAILS());
       navigate("/order/order-confirmation/" + selectedOrder._id, { replace: true });
     }

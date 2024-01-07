@@ -2,12 +2,12 @@ import { IconArrowUpRight } from "@tabler/icons-react";
 import * as Layout from "../../layouts";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { GET_ALL_STORE_PRODUCTS, GET_ALL_STORE_PRODUCT_CATEGORIES } from "../../redux/thunkActions/storeActions";
 import { RESET_STORE } from "../../redux/features/storeSlice";
 import { toast } from "react-hot-toast";
 import { Image } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { storeThunkActions as STA } from "../../redux/thunkActions";
 
 export const Components = () => {
   const dispatch = useDispatch();
@@ -15,8 +15,8 @@ export const Components = () => {
   const { productList, isError, message, categoryList } = useSelector((state) => state.store);
 
   const $initPage = () => {
-    dispatch(GET_ALL_STORE_PRODUCTS());
-    dispatch(GET_ALL_STORE_PRODUCT_CATEGORIES());
+    dispatch(STA.GET_ALL_STORE_PRODUCTS());
+    dispatch(STA.GET_ALL_STORE_PRODUCT_CATEGORIES());
   };
 
   useEffect(() => {

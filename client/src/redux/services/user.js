@@ -2,31 +2,31 @@ import axios from "axios";
 const URL = import.meta.env.VITE_URL;
 const API = `${URL}/api/v1/user`;
 
-export const getUserCartDetails = async () => {
+export const GET_USER_CART_DETAILS = async () => {
   const { data } = await axios.get(API + "/cart");
   return data;
 };
-export const clearUserCart = async () => {
+export const CLEAR_USER_CART = async () => {
   const { data } = await axios.get(API + "/cart/clear");
   return data;
 };
-export const removeProductFromUserCart = async (productId) => {
+export const REMOVE_PRODUCT_FROM_USER_CART = async (productId) => {
   const { data } = await axios.delete(API + "/cart/update-cart/" + productId);
   return data;
 };
-export const addProductToUserCart = async ({ productId, qty }) => {
+export const ADD_PRODUCT_TO_USER_CART = async ({ productId, qty }) => {
   const { data } = await axios.patch(API + "/cart/" + productId, qty);
   return data;
 };
-export const getUserWishlistDetails = async () => {
+export const GET_USER_WISHLIST_DETAILS = async () => {
   const { data } = await axios.get(API + "/wishlist");
   return data;
 };
-export const removeProductFromUserWishlist = async (productId) => {
+export const REMOVE_PRODUCT_FROM_USER_WISHLIST = async (productId) => {
   const { data } = await axios.delete(API + "/wishlist/" + productId);
   return data;
 };
-export const addProductToUserWishlist = async (productId) => {
+export const ADD_PRODUCT_TO_USER_WISHLIST = async (productId) => {
   const { data } = await axios.patch(API + "/wishlist/" + productId);
   return data;
 };

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { paymentThunkActions } from "../thunkActions";
+import { paymentThunkActions as PTA } from "../thunkActions";
+import { $pendingHandler, $rejectionHandler, $fulfilledHandler } from "../utils";
 
 const initialState = {
   isLoading: false,
@@ -11,19 +12,8 @@ const initialState = {
   transactionHistoryList: [],
 };
 
-const $rejectionHandler = (state, action) => {
-  state.isLoading = false;
-  state.isError = true;
-  state.message = action.payload;
-};
-const $fulfilledHandler = (state, action) => {
-  state.isLoading = false;
-  state.isSuccess = true;
-  state.message = action.payload.message;
-};
-
 const paymentSlice = createSlice({
-  name: "payment",
+  name: "PAYMENT",
   initialState,
   reducers: {
     resetPayment(state) {
@@ -34,69 +24,60 @@ const paymentSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(paymentThunkActions.getStripePublicKey.pending, (state) => {
-      state.isLoading = true;
+    // << GET_STRIPE_PUBLIC_KEY
+    builder.addCase(PTA.GET_STRIPE_PUBLIC_KEY.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(paymentThunkActions.getStripePublicKey.rejected, (state, action) => {
+    builder.addCase(PTA.GET_STRIPE_PUBLIC_KEY.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(paymentThunkActions.getStripePublicKey.fulfilled, (state, action) => {
+    builder.addCase(PTA.GET_STRIPE_PUBLIC_KEY.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.publicKey = action.payload.stripePublicKey;
     });
-    // ! createNewPaymentIntent
-    builder.addCase(paymentThunkActions.createNewPaymentIntent.pending, (state) => {
-      state.isLoading = true;
+    // << CREATE_NEW_PAYMENT_INTENT
+    builder.addCase(PTA.CREATE_NEW_PAYMENT_INTENT.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(paymentThunkActions.createNewPaymentIntent.rejected, (state, action) => {
+    builder.addCase(PTA.CREATE_NEW_PAYMENT_INTENT.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(paymentThunkActions.createNewPaymentIntent.fulfilled, (state, action) => {
+    builder.addCase(PTA.CREATE_NEW_PAYMENT_INTENT.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.clientSecret = action.payload.client_secret;
     });
-    // ! createNewPaymentIntentForWallet
-    builder.addCase(paymentThunkActions.createNewPaymentIntentForWallet.pending, (state) => {
-      state.isLoading = true;
+    // << CREATE_NEW_PAYMENT_INTENT_FOR_WALLET
+    builder.addCase(PTA.CREATE_NEW_PAYMENT_INTENT_FOR_WALLET.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(paymentThunkActions.createNewPaymentIntentForWallet.rejected, (state, action) => {
+    builder.addCase(PTA.CREATE_NEW_PAYMENT_INTENT_FOR_WALLET.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(paymentThunkActions.createNewPaymentIntentForWallet.fulfilled, (state, action) => {
+    builder.addCase(PTA.CREATE_NEW_PAYMENT_INTENT_FOR_WALLET.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.clientSecret = action.payload.client_secret;
     });
-    // ! createNewTransactionRecord
-    builder.addCase(paymentThunkActions.createNewTransactionRecord.pending, (state) => {
-      state.isLoading = true;
+    // << CREATE_NEW_TRANSACTION_RECORD
+    builder.addCase(PTA.CREATE_NEW_TRANSACTION_RECORD.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(paymentThunkActions.createNewTransactionRecord.rejected, (state, action) => {
+    builder.addCase(PTA.CREATE_NEW_TRANSACTION_RECORD.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(paymentThunkActions.createNewTransactionRecord.fulfilled, (state, action) => {
+    builder.addCase(PTA.CREATE_NEW_TRANSACTION_RECORD.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.transactionHistoryList = action.payload.transactionHistoryList;
     });
-    // ! getAllUserTransactions
-    builder.addCase(paymentThunkActions.getAllUserTransactions.pending, (state) => {
-      state.isLoading = true;
+    // << GET_ALL_USER_TRANSACTIONS
+    builder.addCase(PTA.GET_ALL_USER_TRANSACTIONS.pending, (state) => {
+      $pendingHandler(state);
     });
-    builder.addCase(paymentThunkActions.getAllUserTransactions.rejected, (state, action) => {
+    builder.addCase(PTA.GET_ALL_USER_TRANSACTIONS.rejected, (state, action) => {
       $rejectionHandler(state, action);
     });
-    builder.addCase(paymentThunkActions.getAllUserTransactions.fulfilled, (state, action) => {
+    builder.addCase(PTA.GET_ALL_USER_TRANSACTIONS.fulfilled, (state, action) => {
       $fulfilledHandler(state, action);
       state.transactionHistoryList = action.payload.transactionHistoryList;
-    });
-    // ! getAllUserTransactions
-    builder.addCase(paymentThunkActions.payOrderWithWallet.pending, (state) => {
-      state.isLoading = true;
-    });
-    builder.addCase(paymentThunkActions.payOrderWithWallet.rejected, (state, action) => {
-      $rejectionHandler(state, action);
-    });
-    builder.addCase(paymentThunkActions.payOrderWithWallet.fulfilled, (state, action) => {
-      $fulfilledHandler(state, action);
     });
   },
 });

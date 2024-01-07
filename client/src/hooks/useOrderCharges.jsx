@@ -8,7 +8,7 @@ export function useOrderCharges({ shippingCharges }) {
   const { chargesPercentage, cartSubtotal } = useSelector((state) => state.store);
 
   useEffect(() => {
-    dispatch(storeThunkActions.getStoreChargesPercentage());
+    dispatch(storeThunkActions.GET_STORE_CHARGES_PERCENTAGE());
   }, []);
 
   // >> cart charges

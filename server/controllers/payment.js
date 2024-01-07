@@ -144,58 +144,10 @@ const generateStripeIntentForWallet = async (req, res, next) => {
   }
 };
 
-const payOrderWithWallet = async (req, res, next) => {
-  try {
-    const { orderId } = req.body;
-
-    if (!orderId || mongoose.isValidObjectId(orderId)) {
-      throw createHttpError(404, "Invalid order, No order exist");
-    }
-
-    const existingOrder = await Order.findById(orderId);
-
-    if (existingOrder.bill.total < 0) {
-      throw createHttpError(400, "Invalid order total");
-    }
-
-    if (existingOrder.bill.total > req.user.wallet.balance) {
-      throw createHttpError(400, "Insufficient balance, Please try other payment method.");
-    }
-
-    await User.findByIdAndUpdate(req.user._id, {
-      $inc: { "wallet.balance": -1 * existingOrder.bill.total },
-    });
-
-    await Order.findOneAndUpdate(
-      { _id: orderId },
-      {
-        $set: {
-          orderState: "Paid",
-        },
-      },
-      { new: true }
-    );
-    // Update transaction state to debited
-    await Transaction.create({
-      user: req.user._id,
-      paymentId: ULID.ulid().toString(),
-      amount: existingOrder.bill.total,
-      transactionState: "credit",
-    });
-
-    res.status(200).json({
-      success: true,
-      message: "Order created successfully",
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 module.exports = {
   sendStripePublicKeyToClient,
   generateStripeIntent,
   stripePaymentWebhook,
   generateStripeIntentForWallet,
-  payOrderWithWallet,
 };

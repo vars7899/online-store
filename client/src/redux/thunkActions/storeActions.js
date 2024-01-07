@@ -1,226 +1,181 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import * as productService from "../services/product";
-import * as categoryService from "../services/category";
-import * as userService from "../services/user";
-import * as addressService from "../services/address";
-import { orderServices } from "../services";
+import { productServices, orderServices, categoryServices, userServices, addressServices } from "../services";
+import { thunkRejectWithMessage } from "../thunkRejectWithMessage";
 
-
-// GET_ALL_STORE_PRODUCTS
-export const GET_ALL_STORE_PRODUCTS = createAsyncThunk("store/getAllStoreProducts", async (thunkAPI) => {
+// << GET_ALL_STORE_PRODUCTS
+export const GET_ALL_STORE_PRODUCTS = createAsyncThunk("STORE/GET_ALL_STORE_PRODUCTS", async (thunkAPI) => {
   try {
-    return await productService.GET_ALL_PRODUCTS();
+    return await productServices.GET_ALL_PRODUCTS();
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// GET_ALL_STORE_PRODUCT_CATEGORIES
+
+// << GET_ALL_STORE_PRODUCT_CATEGORIES
 export const GET_ALL_STORE_PRODUCT_CATEGORIES = createAsyncThunk(
-  "store/getAllStoreProductCategories",
+  "STORE/GET_ALL_STORE_PRODUCT_CATEGORIES",
   async (thunkAPI) => {
     try {
-      return await categoryService.GET_ALL_PRODUCT_CATEGORIES();
+      return await categoryServices.GET_ALL_PRODUCT_CATEGORIES();
     } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      thunkRejectWithMessage(error, thunkAPI);
     }
   }
 );
-// GET_PRODUCT_DETAILS
-export const GET_STORE_PRODUCT_DETAILS = createAsyncThunk("store/getStoreProductDetails", async (data, thunkAPI) => {
+// << GET_PRODUCT_DETAILS
+export const GET_STORE_PRODUCT_DETAILS = createAsyncThunk("STORE/GET_PRODUCT_DETAILS", async (data, thunkAPI) => {
   try {
-    return await productService.GET_PRODUCT_DETAILS(data);
+    return await productServices.GET_PRODUCT_DETAILS(data);
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// REMOVE_PRODUCT_FROM_USER_CART
+
+// << REMOVE_PRODUCT_FROM_USER_CART
 export const REMOVE_PRODUCT_FROM_USER_CART = createAsyncThunk(
-  "store/removeProductFromUserCart",
+  "STORE/REMOVE_PRODUCT_FROM_USER_CART",
   async (data, thunkAPI) => {
     try {
-      return await userService.removeProductFromUserCart(data);
+      return await userServices.REMOVE_PRODUCT_FROM_USER_CART(data);
     } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      thunkRejectWithMessage(error, thunkAPI);
     }
   }
 );
-// ADD_PRODUCT_TO_USER_CART
-export const ADD_PRODUCT_TO_USER_CART = createAsyncThunk("store/addProductToUserCart", async (data, thunkAPI) => {
+// << ADD_PRODUCT_TO_USER_CART
+export const ADD_PRODUCT_TO_USER_CART = createAsyncThunk("STORE/ADD_PRODUCT_TO_USER_CART", async (data, thunkAPI) => {
   try {
-    return await userService.addProductToUserCart(data);
+    return await userServices.ADD_PRODUCT_TO_USER_CART(data);
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// UPDATE_CART_ITEM_QTY
-export const UPDATE_CART_ITEM_QTY = createAsyncThunk("store/updateCartItemQty", async (data, thunkAPI) => {
-  try {
-    return await userService.updateCartItemQty(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+// << UPDATE_CART_ITEM_QTY
+export const UPDATE_CART_ITEM_QTY = createAsyncThunk("STORE/updateCartItemQty", async (data, thunkAPI) => {
+  try {
+    return await userServices.updateCartItemQty(data);
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// REMOVE_PRODUCT_FROM_USER_WISHLIST
+
+// << REMOVE_PRODUCT_FROM_USER_WISHLIST
 export const REMOVE_PRODUCT_FROM_USER_WISHLIST = createAsyncThunk(
-  "store/removeProductFromUserWishlist",
+  "STORE/REMOVE_PRODUCT_FROM_USER_WISHLIST",
   async (data, thunkAPI) => {
     try {
-      return await userService.removeProductFromUserWishlist(data);
+      return await userServices.REMOVE_PRODUCT_FROM_USER_WISHLIST(data);
     } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      thunkRejectWithMessage(error, thunkAPI);
     }
   }
 );
-// ADD_PRODUCT_TO_USER_WISHLIST
+
+// << ADD_PRODUCT_TO_USER_WISHLIST
 export const ADD_PRODUCT_TO_USER_WISHLIST = createAsyncThunk(
-  "store/addProductToUserWishlist",
+  "STORE/ADD_PRODUCT_TO_USER_WISHLIST",
   async (data, thunkAPI) => {
     try {
-      return await userService.addProductToUserWishlist(data);
+      return await userServices.ADD_PRODUCT_TO_USER_WISHLIST(data);
     } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      thunkRejectWithMessage(error, thunkAPI);
     }
   }
 );
-// GET_USER_CART_DETAILS
-export const GET_USER_CART_DETAILS = createAsyncThunk("store/getUserCartDetails", async (thunkAPI) => {
-  try {
-    return await userService.getUserCartDetails();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+// << GET_USER_CART_DETAILS
+export const GET_USER_CART_DETAILS = createAsyncThunk("STORE/GET_USER_CART_DETAILS", async (thunkAPI) => {
+  try {
+    return await userServices.GET_USER_CART_DETAILS();
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// GET_USER_WISHLIST_DETAILS
-export const GET_USER_WISHLIST_DETAILS = createAsyncThunk("store/getUserWishlistDetails", async (thunkAPI) => {
-  try {
-    return await userService.getUserWishlistDetails();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+// << GET_USER_WISHLIST_DETAILS
+export const GET_USER_WISHLIST_DETAILS = createAsyncThunk("STORE/GET_USER_WISHLIST_DETAILS", async (thunkAPI) => {
+  try {
+    return await userServices.GET_USER_WISHLIST_DETAILS();
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// GET_ALL_SHIPPING_ADDRESS
-export const GET_ALL_SHIPPING_ADDRESS = createAsyncThunk("store/getAllShippingAddress", async (thunkAPI) => {
-  try {
-    return await addressService.getAllShippingAddress();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-    return thunkAPI.rejectWithValue(message);
+// << GET_ALL_SHIPPING_ADDRESS
+export const GET_ALL_SHIPPING_ADDRESS = createAsyncThunk("STORE/GET_ALL_SHIPPING_ADDRESS", async (thunkAPI) => {
+  try {
+    return await addressServices.GET_ALL_SHIPPING_ADDRESS();
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
-// CREATE_NEW_SHIPPING_ADDRESS
+
+// << CREATE_NEW_SHIPPING_ADDRESS
 export const CREATE_NEW_SHIPPING_ADDRESS = createAsyncThunk(
-  "store/createNewShippingAddress",
+  "STORE/CREATE_NEW_SHIPPING_ADDRESS",
   async (data, thunkAPI) => {
     try {
-      return await addressService.createNewShippingAddress(data);
+      return await addressServices.CREATE_NEW_SHIPPING_ADDRESS(data);
     } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      thunkRejectWithMessage(error, thunkAPI);
     }
   }
 );
-// UPDATE_DEFAULT_SHIPPING_ADDRESS
+
+// << UPDATE_DEFAULT_SHIPPING_ADDRESS
 export const UPDATE_DEFAULT_SHIPPING_ADDRESS = createAsyncThunk(
-  "store/updateDefaultShippingAddress",
+  "STORE/UPDATE_DEFAULT_SHIPPING_ADDRESS",
   async (data, thunkAPI) => {
     try {
-      return await addressService.updateDefaultShippingAddress(data);
+      return await addressServices.UPDATE_DEFAULT_SHIPPING_ADDRESS(data);
     } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-      return thunkAPI.rejectWithValue(message);
+      thunkRejectWithMessage(error, thunkAPI);
     }
   }
 );
-// DELETE_SHIPPING_ADDRESS
-export const DELETE_SHIPPING_ADDRESS = createAsyncThunk("store/deleteShippingAddress", async (data, thunkAPI) => {
-  try {
-    return await addressService.deleteShippingAddress(data);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
 
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// UPDATE_SHIPPING_ADDRESS
-export const UPDATE_SHIPPING_ADDRESS = createAsyncThunk("store/updateShippingAddress", async (data, thunkAPI) => {
+// << DELETE_SHIPPING_ADDRESS
+export const DELETE_SHIPPING_ADDRESS = createAsyncThunk("STORE/DELETE_SHIPPING_ADDRESS", async (data, thunkAPI) => {
   try {
-    return await addressService.updateShippingAddressDetails(data);
+    return await addressServices.DELETE_SHIPPING_ADDRESS(data);
   } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// >> getStoreChargesPercentage
-export const getStoreChargesPercentage = createAsyncThunk("store/getStoreChargesPercentage", async (thunkAPI) => {
-  try {
-    return await orderServices.getStoreChargesPercentage();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-// >> clearUserCart
-export const clearUserCart = createAsyncThunk("store/clearUserCart", async (thunkAPI) => {
-  try {
-    return await userService.clearUserCart();
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });
 
-// >> createProductReview
-export const createProductReview = createAsyncThunk("store/createProductReview", async (data, thunkAPI) => {
+// << UPDATE_SHIPPING_ADDRESS
+export const UPDATE_SHIPPING_ADDRESS = createAsyncThunk("STORE/UPDATE_SHIPPING_ADDRESS", async (data, thunkAPI) => {
   try {
-    return await productService.createProductReview(data);
+    return await addressServices.UPDATE_SHIPPING_ADDRESS(data);
   } catch (error) {
-    // thunkRejectMessage(error, thunkAPI);
-    const message =
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+    thunkRejectWithMessage(error, thunkAPI);
+  }
+});
 
-    return thunkAPI.rejectWithValue(message);
+// << GET_STORE_CHARGES_PERCENTAGE
+export const GET_STORE_CHARGES_PERCENTAGE = createAsyncThunk("STORE/GET_STORE_CHARGES_PERCENTAGE", async (thunkAPI) => {
+  try {
+    return await orderServices.GET_STORE_CHARGES_PERCENTAGE();
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
+  }
+});
+
+// << CLEAR_USER_CART
+export const CLEAR_USER_CART = createAsyncThunk("STORE/CLEAR_USER_CART", async (thunkAPI) => {
+  try {
+    return await userServices.CLEAR_USER_CART();
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
+  }
+});
+
+// << CREATE_PRODUCT_REVIEW
+export const CREATE_PRODUCT_REVIEW = createAsyncThunk("STORE/CREATE_PRODUCT_REVIEW", async (data, thunkAPI) => {
+  try {
+    return await productServices.CREATE_PRODUCT_REVIEW(data);
+  } catch (error) {
+    thunkRejectWithMessage(error, thunkAPI);
   }
 });

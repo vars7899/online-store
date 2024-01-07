@@ -17,7 +17,7 @@ export const ReviewOrderDetails = () => {
   useEffect(() => {
     if (publicKey && newOrderDetails.isFilled && newOrderDetails.orderItems) {
       dispatch(
-        paymentThunkActions.createNewPaymentIntent({
+        paymentThunkActions.CREATE_NEW_PAYMENT_INTENT({
           orderItems: newOrderDetails.orderItems,
           shippingServiceType: newOrderDetails.shippingServiceType,
         })

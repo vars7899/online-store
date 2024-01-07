@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-hot-toast";
 import { dashboardThunkActions as DTA } from "../thunkActions";
 import { $pendingHandler, $fulfilledHandler, $rejectionHandler } from "../utils";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   isLoading: false,

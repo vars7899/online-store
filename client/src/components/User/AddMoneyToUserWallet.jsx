@@ -25,7 +25,7 @@ export const AddMoneyToUserWallet = ({ children, amount }) => {
   useEffect(() => {
     if (publicKey) {
       dispatch(
-        paymentThunkActions.createNewPaymentIntentForWallet({
+        paymentThunkActions.CREATE_NEW_PAYMENT_INTENT_FOR_WALLET({
           amount,
         })
       );
@@ -96,7 +96,7 @@ const WalletCheckoutForm = ({ onClose, amount, clientSecret }) => {
     try {
       let paymentIntent = clientSecret.split("_secret")[0];
       // Create New Transaction
-      dispatch(paymentThunkActions.createNewTransactionRecord({ amount, paymentId: paymentIntent }));
+      dispatch(paymentThunkActions.CREATE_NEW_TRANSACTION_RECORD({ amount, paymentId: paymentIntent }));
 
       const { error } = await stripe.confirmPayment({
         elements,

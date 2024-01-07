@@ -47,7 +47,7 @@ const ReviewModal = ({ children, item }) => {
       return toast.error("Minimum rating of 1 is valid");
     }
 
-    dispatch(storeThunkActions.createProductReview({ productId: item.product._id, formData: reviewData }));
+    dispatch(storeThunkActions.CREATE_PRODUCT_REVIEW({ productId: item.product._id, formData: reviewData }));
     $clearForm();
   }
 

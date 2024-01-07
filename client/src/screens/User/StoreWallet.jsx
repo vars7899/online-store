@@ -14,7 +14,7 @@ export const StoreWallet = () => {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(paymentThunkActions.getAllUserTransactions());
+    dispatch(paymentThunkActions.GET_ALL_USER_TRANSACTIONS());
   }, [dispatch]);
 
   useEffect(() => {

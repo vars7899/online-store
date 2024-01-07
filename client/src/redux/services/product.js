@@ -31,7 +31,7 @@ export const CREATE_NEW_PRODUCT = async (formData) => {
   return data;
 };
 
-export const createProductReview = async ({ productId, formData }) => {
+export const CREATE_PRODUCT_REVIEW = async ({ productId, formData }) => {
   const { data } = await axios.post(API + "/review/" + productId, formData);
   return data;
 };

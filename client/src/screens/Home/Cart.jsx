@@ -67,7 +67,7 @@ export const Cart = () => {
                       paddingRight={"1rem"}
                       marginRight={"0.5rem"}
                       size={"sm"}
-                      onClick={() => dispatch(storeThunkAction.clearUserCart())}
+                      onClick={() => dispatch(storeThunkAction.CLEAR_USER_CART())}
                     >
                       Clear Cart
                     </Button>
